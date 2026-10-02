@@ -2,6 +2,9 @@
 import { ref, onMounted, watch } from 'vue'
 import { useQuasar } from 'quasar'
 import api from '@/config/api'
+import DeskForm from '@/desk/desk/framework/form/DeskForm.vue'
+import DeskField from '@/desk/desk/framework/form/DeskField.vue'
+import type { DeskIssue } from '@/desk/desk/framework/form/issues'
 
 const $q = useQuasar()
 
@@ -149,8 +152,21 @@ const openEditDialog = (row: any) => {
   showDialog.value = true
 }
 
+const formIssues = ref<DeskIssue[]>([])
+
+const validate = () => {
+  const issues: DeskIssue[] = []
+  if (!form.value.name) issues.push({ fieldId: 'name', message: 'Required' })
+  if (!form.value.code) issues.push({ fieldId: 'code', message: 'Required' })
+  if (!form.value.type) issues.push({ fieldId: 'type', message: 'Required' })
+  if (!form.value.status) issues.push({ fieldId: 'status', message: 'Required' })
+  formIssues.value = issues
+  return issues.length === 0
+}
+
 // ─── Submit ───────────────────────────────────────────────────────────────────
 const onSubmit = async () => {
+  if (!validate()) return
   submitting.value = true
   try {
     if (isEditMode.value && editingId.value) {
@@ -311,58 +327,50 @@ onMounted(() => refreshAll())
         </q-card-section>
 
         <q-card-section class="col scroll q-pa-lg">
-          <q-form id="partyForm" @submit.prevent="onSubmit">
-
-            <!-- Identity -->
+          <DeskForm id="partyForm" :issues="formIssues" @save="onSubmit" data-desk-layer>
+            
             <div class="form-section-label">Identity</div>
-            <q-input v-model="form.name" label="Party Name *" outlined dense class="q-mb-md" placeholder="e.g. Reliance Industries Ltd" :rules="[v => !!v || 'Required']" lazy-rules />
+            <DeskField class="q-mb-md" fieldId="name" label="Party Name" v-model="form.name" required initial />
 
             <div class="row q-col-gutter-sm q-mb-md">
               <div class="col-6">
-                <q-input v-model="form.code" label="Party Code *" outlined dense placeholder="RIL-001" :rules="[v => !!v || 'Required']" lazy-rules
-                  :disable="isEditMode" :hint="isEditMode ? 'Code cannot be changed' : 'Auto-generated from name'" />
+                <DeskField fieldId="code" label="Party Code" v-model="form.code" required :readonly="isEditMode" />
               </div>
               <div class="col-6">
-                <q-select v-model="form.type" :options="typeOptions" option-value="value" option-label="label"
-                  emit-value map-options label="Type *" outlined dense :rules="[v => !!v || 'Required']" lazy-rules />
+                <DeskField fieldId="type" kind="select" label="Type" :options="typeOptions" v-model="form.type" required />
               </div>
             </div>
 
-            <!-- Tax -->
             <q-separator class="q-mb-md" />
             <div class="form-section-label">Tax & Compliance</div>
             <div class="row q-col-gutter-sm q-mb-md">
-              <div class="col-7"><q-input v-model="form.gstin" label="GSTIN" outlined dense placeholder="27AAAAA0000A1Z5" maxlength="15" /></div>
-              <div class="col-5"><q-input v-model="form.pan" label="PAN" outlined dense placeholder="AAAAA0000A" maxlength="10" /></div>
+              <div class="col-7"><DeskField fieldId="gstin" label="GSTIN" v-model="form.gstin" /></div>
+              <div class="col-5"><DeskField fieldId="pan" label="PAN" v-model="form.pan" /></div>
             </div>
 
-            <!-- Contact -->
             <q-separator class="q-mb-md" />
             <div class="form-section-label">Contact Details</div>
             <div class="row q-col-gutter-sm q-mb-md">
-              <div class="col-6"><q-input v-model="form.phone" label="Phone" outlined dense placeholder="98765XXXXX" /></div>
-              <div class="col-6"><q-input v-model="form.email" type="email" label="Email" outlined dense placeholder="logistics@company.com" /></div>
+              <div class="col-6"><DeskField fieldId="phone" label="Phone" v-model="form.phone" /></div>
+              <div class="col-6"><DeskField fieldId="email" label="Email" v-model="form.email" /></div>
             </div>
 
-            <!-- Address -->
             <q-separator class="q-mb-md" />
             <div class="form-section-label">Address</div>
-            <q-input v-model="form.addressLine1" label="Address Line 1" outlined dense class="q-mb-sm" />
-            <q-input v-model="form.addressLine2" label="Address Line 2" outlined dense class="q-mb-md" />
+            <DeskField class="q-mb-sm" fieldId="addressLine1" label="Address Line 1" v-model="form.addressLine1" />
+            <DeskField class="q-mb-md" fieldId="addressLine2" label="Address Line 2" v-model="form.addressLine2" />
             <div class="row q-col-gutter-sm q-mb-md">
-              <div class="col-4"><q-input v-model="form.city" label="City" outlined dense /></div>
+              <div class="col-4"><DeskField fieldId="city" label="City" v-model="form.city" /></div>
               <div class="col-5">
-                <q-select v-model="form.state" :options="indianStates" label="State" outlined dense use-input input-debounce="0" behavior="menu" />
+                <DeskField fieldId="state" kind="select" label="State" :options="indianStates.map(s => ({label: s, value: s}))" v-model="form.state" />
               </div>
-              <div class="col-3"><q-input v-model="form.pincode" label="Pincode" outlined dense maxlength="6" /></div>
+              <div class="col-3"><DeskField fieldId="pincode" label="Pincode" v-model="form.pincode" /></div>
             </div>
 
-            <!-- Status -->
             <q-separator class="q-mb-md" />
-            <q-select v-model="form.status" :options="statusOptions" option-value="value" option-label="label"
-              emit-value map-options label="Status *" outlined dense :rules="[v => !!v || 'Required']" lazy-rules />
+            <DeskField fieldId="status" kind="select" label="Status" :options="statusOptions" v-model="form.status" required />
 
-          </q-form>
+          </DeskForm>
         </q-card-section>
 
         <q-card-section class="row justify-end items-center q-py-sm q-px-lg" style="border-top:1px solid #f0f0f0;background:#fafafa;">

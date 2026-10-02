@@ -1,0 +1,900 @@
+/*
+ * Grid look ported from vue3-excel-editor (MIT).
+ * Copyright (c) 2019 Kenneth Cheng <app.6502@gmail.com>
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ */
+
+.desk-grid.component-content {
+  display: flex;
+  flex-flow: column;
+  position: relative;
+  max-width: 100%;
+  line-height: 1.1;
+  overflow: hidden;
+  border: 1px solid var(--desk-grid-line);
+  background: var(--desk-row-bg);
+  color: var(--desk-text);
+  min-height: 180px;
+  height: 100%;
+}
+
+.desk-grid .table-content {
+  flex: 1 1 auto;
+  font-size: 1rem;
+  text-shadow: 0.3px 0.3px 1px #ccc;
+  overflow: auto;
+  scrollbar-gutter: stable;
+  overflow-anchor: none;
+  user-select: none;
+  position: relative;
+  width: 100%;
+  outline: none;
+}
+
+.desk-grid .systable {
+  width: max-content;
+  min-width: 100%;
+  border: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-bottom: 1px solid var(--desk-grid-line);
+}
+
+.desk-grid .systable th,
+.desk-grid .systable td {
+  vertical-align: bottom;
+  padding: 0.2rem 0.3rem;
+  font-size: var(--desk-font);
+  height: var(--desk-row-height);
+  border-top: 0;
+  border-left: 0;
+  box-sizing: border-box;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.desk-grid .systable th:not(:last-child),
+.desk-grid .systable td:not(:last-child) {
+  border-right: 1px solid var(--desk-grid-line);
+}
+
+.desk-grid .systable tbody tr {
+  background: var(--desk-row-bg);
+}
+
+.desk-grid .systable tbody tr:not(:first-child) td {
+  border-top: 1px solid var(--desk-grid-line);
+}
+
+.desk-grid .systable tbody td {
+  cursor: cell;
+  padding-bottom: 0.1rem;
+}
+
+.desk-grid .systable td.desk-cell-stack {
+  height: auto;
+  white-space: normal;
+  vertical-align: top;
+  overflow: visible;
+}
+
+.desk-grid .desk-cell-value,
+.desk-grid .desk-cell-caption,
+.desk-grid .desk-cell-tags {
+  display: block;
+}
+
+.desk-grid .desk-cell-caption,
+.desk-grid .desk-tag {
+  color: var(--desk-muted, dimgray);
+  font-size: 0.72rem;
+  line-height: 1.1;
+}
+
+.desk-grid td.desk-cell-stack .desk-cell-caption,
+.desk-grid td.desk-cell-stack .desk-cell-tags {
+  margin-top: 0.1rem;
+}
+
+.desk-grid td.desk-cell-stack .desk-cell-caption ~ .desk-cell-tags {
+  margin-top: 0;
+}
+
+.desk-grid .desk-cell-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1px 6px;
+}
+
+.desk-grid .systable td.align-right .desk-cell-tags {
+  justify-content: flex-end;
+}
+
+.desk-grid .desk-tag {
+  border: 0;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
+}
+
+.desk-grid .desk-tag.hint {
+  color: #8a5a00;
+}
+
+.desk-grid .desk-tag.warn {
+  color: var(--desk-error, #b00020);
+}
+
+.desk-grid tr.desk-row-drawer td {
+  height: auto;
+  padding: 0;
+  background: var(--desk-filter-bg, #fffff2);
+  cursor: default;
+  white-space: normal;
+  overflow: visible;
+}
+
+.desk-grid .systable thead th,
+.desk-grid .systable thead td {
+  padding: 0.4rem 0.3rem;
+  font-weight: 400;
+  height: var(--desk-header-height);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--desk-header-bg);
+  border-bottom: 1px solid var(--desk-grid-line);
+}
+
+.desk-grid .systable thead th.group-head {
+  text-align: center;
+  top: 0;
+}
+
+.desk-grid .systable thead tr:nth-child(2) th {
+  top: var(--desk-header-height);
+}
+
+.desk-grid .systable th.focus {
+  border-bottom: 1px solid var(--desk-header-focus) !important;
+}
+
+.desk-grid .systable .first-col {
+  background: var(--desk-header-bg);
+  width: var(--desk-index-width);
+  min-width: var(--desk-index-width);
+  position: sticky;
+  left: 0;
+  text-align: center;
+  z-index: 6;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.desk-grid .systable thead .first-col {
+  z-index: 10;
+}
+
+.desk-grid .systable thead .first-col.column-picker {
+  cursor: pointer;
+}
+
+
+.desk-grid .systable td.first-col.focus {
+  border-right: 1px solid var(--desk-header-focus) !important;
+}
+
+.desk-grid .systable tr.select td {
+  background: var(--desk-row-selected) !important;
+}
+
+.desk-grid .systable td.in-range {
+  background: #d9e6d9;
+}
+
+.desk-grid .systable thead td.column-filter,
+.desk-grid .systable tfoot .row-summary,
+.desk-grid .systable tfoot .voucher-foot td {
+  background: var(--desk-filter-bg);
+}
+
+.desk-grid .systable tfoot td {
+  background: var(--desk-filter-bg);
+}
+
+.desk-grid tr.desk-pad td {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  pointer-events: none;
+}
+
+.desk-grid .systable tfoot .row-summary {
+  height: var(--desk-footer-height);
+  border-top: 1px solid var(--desk-grid-line);
+  font-weight: 500;
+}
+
+.desk-grid .systable tfoot .voucher-foot td {
+  height: auto;
+  white-space: normal;
+  vertical-align: middle;
+  border-top: 1px solid var(--desk-grid-line);
+}
+
+.desk-grid .systable tfoot .voucher-foot-details {
+  vertical-align: top;
+  overflow: hidden;
+}
+
+.desk-grid .systable tfoot .voucher-foot-amount {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.desk-grid .systable tfoot .voucher-foot td.grand {
+  font-weight: 700;
+  border-top: 2px solid var(--desk-grid-line);
+}
+
+.desk-grid .systable thead th .desk-col-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+  width: 100%;
+}
+
+.desk-grid .systable thead th.align-right .desk-col-head {
+  flex-direction: row-reverse;
+}
+
+.desk-grid .systable thead th .desk-col-dialog {
+  display: inline-flex;
+  flex: none;
+  color: var(--desk-text);
+  opacity: 0.7;
+}
+
+.desk-grid .systable thead th .desk-col-dialog svg {
+  width: 11px;
+  height: 11px;
+}
+
+.desk-grid .systable td.align-right,
+.desk-grid .systable th.align-right {
+  text-align: right;
+}
+
+.desk-grid .systable td.align-center {
+  text-align: center;
+}
+
+.desk-grid .systable td.marker-date {
+  background-image: linear-gradient(225deg, #666 0 6px, transparent 6px);
+  background-repeat: no-repeat;
+  background-position: right 2px top 2px;
+  background-size: 8px 8px;
+}
+
+/* Room for the search or dropdown mark. The mark says what editing this cell opens. */
+.desk-grid .systable td.marker-lookup,
+.desk-grid .systable td.marker-select {
+  position: relative;
+  padding-right: 16px;
+}
+
+.desk-grid .systable td .desk-affix.is-quiet {
+  height: var(--desk-row-height);
+  bottom: auto;
+  pointer-events: none;
+  cursor: default;
+  opacity: 0.45;
+}
+
+.desk-grid .systable td.cell-error {
+  background-image: linear-gradient(135deg, var(--desk-error) 0 6px, transparent 6px);
+  background-repeat: no-repeat;
+  background-position: right 0 top 0;
+}
+
+.desk-grid .systable td.link {
+  color: blue;
+  cursor: pointer;
+}
+
+.desk-grid .systable td.group-row {
+  background: #f4f6f8;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.desk-grid .input-square {
+  position: absolute;
+  padding: 0;
+  z-index: 8;
+  border: 2px solid var(--desk-cursor);
+  box-sizing: border-box;
+  background: transparent;
+  pointer-events: none;
+}
+
+.desk-grid .input-square.idle {
+  border-color: #9aa0a6;
+}
+
+.desk-grid .input-square.idle .rb-square {
+  display: none;
+}
+
+.desk-grid .input-square.editing {
+  pointer-events: auto;
+  background: var(--desk-row-bg);
+}
+
+.desk-grid .rb-square {
+  width: 9px;
+  height: 9px;
+  border-top: 2px solid white;
+  border-left: 2px solid white;
+  background: var(--desk-cursor);
+  position: absolute;
+  bottom: -3px;
+  right: -2px;
+  cursor: crosshair;
+  pointer-events: auto;
+}
+
+.desk-grid .input-box {
+  font-family: inherit;
+  color: inherit;
+  font-size: var(--desk-font);
+  width: 100%;
+  height: 100%;
+  border: 0;
+  resize: none;
+  white-space: nowrap;
+  overflow: hidden;
+  background: var(--desk-row-bg);
+  outline: none;
+  padding: 0 2px;
+}
+
+.desk-grid .actions-col {
+  white-space: nowrap;
+  width: 1%;
+}
+.desk-grid .actions-col button {
+  margin-right: 4px;
+  font-size: 0.82rem;
+}
+
+.desk-grid .footer {
+  min-height: var(--desk-footer-height);
+  line-height: 25px;
+  color: var(--desk-muted);
+  font-size: var(--desk-font);
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  border-top: 1px solid var(--desk-grid-line);
+  background: var(--desk-header-bg);
+  gap: 12px;
+}
+
+.desk-grid .footer a {
+  color: var(--desk-link);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.desk-grid .footer a.disabled {
+  color: gray;
+  pointer-events: none;
+}
+
+.desk-grid .footer-end {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.desk-grid .footer-end button {
+  height: 22px;
+  font-size: var(--desk-font);
+  border: 1px solid var(--desk-grid-line);
+  background: var(--desk-row-bg);
+  color: var(--desk-text);
+  cursor: pointer;
+  padding: 0 8px;
+}
+
+.desk-combo,
+.desk-lookup {
+  position: relative;
+  width: 100%;
+}
+
+.desk-field .desk-combo > input,
+.desk-field .desk-lookup > input,
+.desk-grid .desk-combo > input,
+.desk-grid .desk-lookup > input {
+  padding-right: 18px;
+}
+
+.desk-affix {
+  position: absolute;
+  top: 0;
+  right: 1px;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--desk-text);
+  opacity: 0.65;
+  cursor: pointer;
+}
+
+.desk-affix svg {
+  width: 14px;
+  height: 14px;
+  display: block;
+}
+
+.desk-suggest {
+  position: fixed;
+  z-index: 20;
+  padding: 3px;
+  background: var(--desk-suggest-bg);
+  border: 1px solid var(--desk-cursor);
+  font-size: var(--desk-font);
+  max-height: 235px;
+  overflow: auto;
+  min-width: 220px;
+}
+
+.desk-suggest .hit {
+  display: flex;
+  gap: 12px;
+  padding: 4px 6px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.desk-suggest .hit span {
+  min-width: 72px;
+}
+
+.desk-suggest .hit.head {
+  font-weight: 600;
+  cursor: default;
+  border-bottom: 1px solid var(--desk-grid-line);
+}
+
+.desk-suggest .hit.active {
+  background: var(--desk-suggest-active);
+}
+
+.desk-grid-menu {
+  position: absolute;
+  z-index: 12;
+  top: 32px;
+  left: 4px;
+  min-width: 220px;
+  background: var(--desk-row-bg);
+  border: 1px solid var(--desk-grid-line);
+  font-size: var(--desk-font);
+  max-height: 280px;
+  overflow: auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.desk-grid-menu-item {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 8px;
+  min-height: 26px;
+  padding: 4px 10px;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.desk-grid-menu-item.on,
+.desk-grid-menu-item:hover {
+  background: #e9ecef;
+}
+
+.desk-grid-menu-check {
+  width: 1em;
+  flex: 0 0 1em;
+  text-align: center;
+}
+
+.desk-form {
+  font-size: var(--desk-font);
+  color: var(--desk-text);
+}
+
+.desk-field {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+/* A compact block of fields, four across. The sales invoice header and the account form use it. */
+.desk-field-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2px 12px;
+}
+
+.desk-field-grid .desk-field {
+  grid-template-columns: 96px minmax(0, 1fr);
+  margin-bottom: 0;
+}
+
+@media (max-width: 1200px) {
+  .desk-field-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 860px) {
+  .desk-field-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.desk-field label {
+  text-align: right;
+  color: var(--desk-muted);
+}
+
+/* The input column. A suffix, such as a currency rate, sits in the same control. */
+.desk-field-control {
+  display: flex;
+  min-width: 0;
+  width: 100%;
+}
+
+.desk-field-control > .desk-lookup,
+.desk-field-control > .desk-combo,
+.desk-field-control > .desk-qselect {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.desk-field .desk-currency-rate {
+  width: 4.5rem;
+  flex: 0 0 4.5rem;
+  border-left: 0;
+  text-align: right;
+}
+
+.desk-field-control:has(.desk-currency-rate) .desk-lookup > input {
+  border-right: 0;
+}
+
+.desk-field input,
+.desk-field select,
+.desk-field textarea {
+  height: var(--desk-row-height);
+  font-size: var(--desk-font);
+  border: 1px solid var(--desk-grid-line);
+  background: var(--desk-row-bg);
+  color: var(--desk-text);
+  padding: 0 4px;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.desk-field input:focus,
+.desk-field select:focus,
+.desk-field textarea:focus {
+  border: 2px solid var(--desk-cursor);
+}
+
+.desk-field .desk-qselect {
+  width: 100%;
+}
+
+/* Required and problem fields. The invalid tone follows the theme tokens. */
+.desk-req {
+  color: var(--desk-error);
+}
+
+.desk-field.is-invalid input,
+.desk-field.is-invalid textarea {
+  border-color: var(--desk-error);
+  background: var(--desk-invalid-bg);
+}
+
+.desk-field-msg {
+  grid-column: 2;
+  color: var(--desk-error);
+  font-size: 0.8em;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Problems no field on screen can show. They stay until the field appears or the problem is gone. */
+.desk-toasts {
+  position: fixed;
+  right: 12px;
+  bottom: 12px;
+  z-index: 3000;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-width: min(360px, calc(100vw - 24px));
+}
+
+.desk-toast {
+  padding: 6px 10px;
+  background: var(--desk-row-bg);
+  color: var(--desk-text);
+  border: 1px solid var(--desk-error);
+  border-left-width: 4px;
+  font-size: var(--desk-font);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+}
+
+.desk-field .desk-qselect .q-field__control,
+.desk-field .desk-qselect .q-field__native,
+.desk-field .desk-qselect .q-field__marginal {
+  min-height: var(--desk-row-height);
+  height: var(--desk-row-height);
+}
+
+.desk-grid .input-square .desk-combo,
+.desk-grid .input-square .desk-lookup {
+  height: 100%;
+}
+
+.desk-section {
+  border: 1px solid var(--desk-grid-line);
+  margin-bottom: 8px;
+  background: var(--desk-row-bg);
+}
+
+.desk-section h3 {
+  margin: 0;
+  padding: 4px 8px;
+  background: var(--desk-header-bg);
+  font-size: var(--desk-font);
+  font-weight: 600;
+}
+
+.desk-section .body {
+  padding: 8px;
+}
+
+.desk-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  padding: 8px;
+  gap: 8px;
+  background: var(--desk-row-bg);
+  color: var(--desk-text);
+}
+
+.desk-toolbar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: var(--desk-font);
+}
+
+.desk-toolbar button,
+.desk-fkey button {
+  height: 24px;
+  font-size: var(--desk-font);
+  border: 1px solid var(--desk-grid-line);
+  background: var(--desk-header-bg);
+  color: var(--desk-text);
+  cursor: pointer;
+  padding: 0 8px;
+}
+
+.desk-error {
+  color: var(--desk-error);
+  font-size: var(--desk-font);
+}
+
+.desk-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.desk-dialog-panel {
+  min-width: 320px;
+  max-width: 560px;
+  padding: 12px;
+  background: var(--desk-row-bg);
+  color: var(--desk-text);
+  border: 2px solid var(--desk-cursor);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+.desk-dialog-panel h3 {
+  margin: 0 0 8px;
+  font-size: var(--desk-font);
+}
+
+.desk-dialog-panel p {
+  margin: 0 0 12px;
+}
+
+.desk-dialog-panel button {
+  height: 24px;
+  margin-right: 8px;
+  font-size: var(--desk-font);
+  border: 1px solid var(--desk-grid-line);
+  background: var(--desk-header-bg);
+  color: var(--desk-text);
+  cursor: pointer;
+  padding: 0 8px;
+}
+
+/* A form that fills the page: fields on top, tab strip, then a scrolling tab pane. */
+.desk-form-fill {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  gap: 8px;
+}
+
+.desk-tabs {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  border-bottom: 1px solid var(--desk-grid-line);
+  font-size: var(--desk-font);
+}
+
+.desk-tabs button {
+  height: 26px;
+  padding: 0 10px;
+  border: 1px solid var(--desk-grid-line);
+  border-bottom: 0;
+  background: var(--desk-header-bg);
+  color: var(--desk-text);
+  cursor: pointer;
+}
+
+.desk-tabs button.active {
+  background: var(--desk-row-bg);
+  border-color: var(--desk-cursor);
+  font-weight: 600;
+}
+
+.desk-tabs button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.desk-tabs-hint {
+  margin-left: auto;
+  color: var(--desk-muted);
+}
+
+.desk-tab-pane {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  padding: 4px 2px;
+}
+
+.desk-subhead {
+  margin: 8px 0 4px;
+  font-size: var(--desk-font);
+  color: var(--desk-muted);
+}
+
+.desk-note {
+  margin: 6px 0;
+  font-size: var(--desk-font);
+  color: var(--desk-muted);
+}
+
+.desk-tab-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  font-size: var(--desk-font);
+}
+
+.desk-tab-actions button {
+  height: 24px;
+  font-size: var(--desk-font);
+  border: 1px solid var(--desk-grid-line);
+  background: var(--desk-header-bg);
+  color: var(--desk-text);
+  cursor: pointer;
+  padding: 0 8px;
+}
+
+.desk-chips {
+  grid-column: span 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-items: center;
+}
+
+.desk-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0 6px;
+  border: 1px solid var(--desk-grid-line);
+  background: var(--desk-header-bg);
+  font-size: var(--desk-font);
+}
+
+.desk-chip button {
+  border: 0;
+  background: none;
+  color: var(--desk-muted);
+  cursor: pointer;
+}
+
+/* Page actions sit on the bottom of the page, the same bar as the sales invoice. */
+.desk-footer-bar {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex: 0 0 auto;
+  margin: 0 -8px -8px;
+  padding: 4px 8px;
+  min-height: 33px;
+  background: var(--desk-header-bg);
+  border-top: 1px solid var(--desk-grid-line);
+}
+
+.desk-footer-bar button {
+  height: 24px;
+  font-size: var(--desk-font);
+  border: 1px solid var(--desk-grid-line);
+  background: var(--desk-row-bg);
+  color: var(--desk-text);
+  cursor: pointer;
+  padding: 0 8px;
+}
+
+.desk-footer-bar button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
