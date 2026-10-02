@@ -32,9 +32,6 @@ const menu = [
       { name: 'Vehicle Master', icon: 'local_shipping', to: '/vehicles' },
       { name: 'Party Master', icon: 'storefront', to: '/parties' },
       { name: 'Driver Master', icon: 'badge', to: '/drivers' },
-      { name: 'Vehicle Types', icon: 'category', to: '/vehicle-types' },
-      { name: 'Carrier Master', icon: 'airport_shuttle', to: '/carriers' },
-      { name: 'Route Master', icon: 'route', to: '/routes' }
     ]
   },
   {
