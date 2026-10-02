@@ -40,7 +40,7 @@ const user_model_1 = require("./modules/users/models/user.model");
 const organization_model_1 = require("./modules/organizations/models/organization.model");
 const role_model_1 = require("./modules/roles/models/role.model");
 const bcrypt = __importStar(require("bcrypt"));
-const enums_1 = require("./common/enums");
+const user_model_2 = require("./modules/users/models/user.model");
 async function bootstrap() {
     const app = await core_1.NestFactory.createApplicationContext(app_module_1.AppModule);
     const userModel = app.get((0, sequelize_1.getModelToken)(user_model_1.User));
@@ -72,7 +72,7 @@ async function bootstrap() {
             password: hashedPassword,
             firstName: 'Super',
             lastName: 'Admin',
-            status: enums_1.UserStatus.ACTIVE,
+            status: user_model_2.UserStatus.ACTIVE,
         });
         console.log('Super Admin user created successfully.');
     }

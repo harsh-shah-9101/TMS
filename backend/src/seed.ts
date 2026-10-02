@@ -5,7 +5,7 @@ import { User } from './modules/users/models/user.model';
 import { Organization, OrganizationStatus } from './modules/organizations/models/organization.model';
 import { Role, RoleName } from './modules/roles/models/role.model';
 import * as bcrypt from 'bcrypt';
-import { UserStatus } from './common/enums';
+import { UserStatus } from './modules/users/models/user.model';
 
 async function bootstrap() {
   const app = await NestFactory.createApplicationContext(AppModule);
