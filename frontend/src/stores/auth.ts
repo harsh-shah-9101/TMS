@@ -1,31 +1,60 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import api from '../config/api'
 
-export const useAuthStore = defineStore('auth', () => {
-  const token = ref<string | null>(localStorage.getItem('token'))
-  const user = ref<any>(null)
+const TOKEN_KEY = 'tms_token'
+const USER_KEY = 'tms_user'
 
+// ── Backward-compat migration: move old 'token' key to new 'tms_token' ────────
+const _oldToken = localStorage.getItem('token')
+if (_oldToken && !localStorage.getItem(TOKEN_KEY)) {
+  localStorage.setItem(TOKEN_KEY, _oldToken)
+  localStorage.removeItem('token')
+}
+
+export const useAuthStore = defineStore('auth', () => {
+  // ── State ──────────────────────────────────────────────────────────────────
+  const token = ref<string | null>(localStorage.getItem(TOKEN_KEY))
+  const user = ref<any>((() => {
+    try { return JSON.parse(localStorage.getItem(USER_KEY) || 'null') } catch { return null }
+  })())
+
+  // ── Getters ────────────────────────────────────────────────────────────────
+  const isAuthenticated = computed(() => !!token.value)
+  const userRole = computed(() => user.value?.role?.name || null)
+  const organizationId = computed(() => user.value?.organizationId || null)
+
+  // ── Actions ────────────────────────────────────────────────────────────────
   const setToken = (newToken: string) => {
     token.value = newToken
-    localStorage.setItem('token', newToken)
+    localStorage.setItem(TOKEN_KEY, newToken)
   }
 
   const setUser = (userData: any) => {
     user.value = userData
+    localStorage.setItem(USER_KEY, JSON.stringify(userData))
   }
 
   const logout = () => {
     token.value = null
     user.value = null
-    localStorage.removeItem('token')
+    localStorage.removeItem(TOKEN_KEY)
+    localStorage.removeItem(USER_KEY)
+  }
+
+  const login = async (email: string, password: string) => {
+    const response = await api.post('/auth/login', { email, password })
+    const { accessToken, user: userData } = response.data
+    setToken(accessToken)
+    setUser(userData)
+    return response.data
   }
 
   const fetchProfile = async () => {
     if (!token.value) return null
     try {
       const response = await api.get('/auth/me')
-      user.value = response.data
+      setUser(response.data)
       return user.value
     } catch (error) {
       logout()
@@ -33,5 +62,9 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  return { token, user, setToken, setUser, logout, fetchProfile }
+  return {
+    token, user,
+    isAuthenticated, userRole, organizationId,
+    setToken, setUser, login, logout, fetchProfile,
+  }
 })

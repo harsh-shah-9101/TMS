@@ -3,7 +3,6 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 import { useAuthStore } from '@/stores/auth'
-import api from '@/config/api'
 
 const router = useRouter()
 const $q = useQuasar()
@@ -17,16 +16,8 @@ const loading = ref(false)
 const onSubmit = async () => {
   loading.value = true
   try {
-    const response = await api.post('/auth/login', {
-      email: email.value,
-      password: password.value,
-    })
-    
-    // Set token and user in Pinia store
-    authStore.setToken(response.data.accessToken)
-    authStore.setUser(response.data.user)
-    
-    $q.notify({ type: 'positive', message: 'Logged in successfully' })
+    await authStore.login(email.value, password.value)
+    $q.notify({ type: 'positive', message: 'Welcome back! Logged in successfully.' })
     router.push('/')
   } catch (error: any) {
     const message = error.response?.data?.message || 'Login failed. Please check your credentials.'
