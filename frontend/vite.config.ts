@@ -12,5 +12,10 @@ export default defineConfig({
     quasar({
       sassVariables: fileURLToPath(new URL('./src/quasar-variables.sass', import.meta.url))
     })
-  ]
+  ],
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url))
+    }
+  }
 })
