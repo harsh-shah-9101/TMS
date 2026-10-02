@@ -38,32 +38,32 @@ export class VehicleType extends Model<VehicleType> {
     allowNull: true,
     field: 'capacity_tons',
   })
-  declare capacityTons: number;
+  declare capacityTons?: number;
 
   @Column({
     type: DataType.FLOAT,
     allowNull: true,
     field: 'volume_cu_ft',
   })
-  declare volumeCuFt: number;
+  declare volumeCuFt?: number;
 
   @Column({
     type: DataType.INTEGER,
     allowNull: true,
     field: 'axle_count',
   })
-  declare axleCount: number;
+  declare axleCount?: number;
 
   @Column({
     type: DataType.STRING(50),
     allowNull: true,
     field: 'fuel_type',
   })
-  declare fuelType: string;
+  declare fuelType?: string;
 
   @Column({
     type: DataType.STRING(50),
     defaultValue: 'ACTIVE',
   })
-  declare status: string;
+  declare status?: string;
 }

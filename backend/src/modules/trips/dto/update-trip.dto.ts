@@ -1,6 +1,7 @@
 import { CreateTripDto } from './create-trip.dto';
 
 export class UpdateTripDto implements Partial<CreateTripDto> {
+  tripNumber?: string;
   routeId?: string;
   vehicleId?: string;
   driverId?: string;
@@ -11,4 +12,5 @@ export class UpdateTripDto implements Partial<CreateTripDto> {
   startOdometer?: number;
   endOdometer?: number;
   remarks?: string;
+  stops?: any[];
 }

@@ -26,21 +26,21 @@ export class Organization extends Model<Organization> {
     type: DataType.STRING(255),
     allowNull: false,
   })
-  name: string;
+  declare name: string;
 
   @Column({
     type: DataType.STRING(50),
     allowNull: false,
     unique: true,
   })
-  code: string;
+  declare code: string;
 
   @Column({
     type: DataType.ENUM(...Object.values(OrganizationStatus)),
     defaultValue: OrganizationStatus.ACTIVE,
   })
-  status: OrganizationStatus;
+  declare status?: OrganizationStatus;
 
   @HasMany(() => User)
-  users: User[];
+  declare users?: User[];
 }

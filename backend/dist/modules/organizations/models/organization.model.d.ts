@@ -9,6 +9,6 @@ export declare class Organization extends Model<Organization> {
     id: string;
     name: string;
     code: string;
-    status: OrganizationStatus;
-    users: User[];
+    status?: OrganizationStatus;
+    users?: User[];
 }

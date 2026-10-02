@@ -19,10 +19,6 @@ var OrganizationStatus;
     OrganizationStatus["SUSPENDED"] = "SUSPENDED";
 })(OrganizationStatus || (exports.OrganizationStatus = OrganizationStatus = {}));
 let Organization = class Organization extends sequelize_typescript_1.Model {
-    name;
-    code;
-    status;
-    users;
 };
 exports.Organization = Organization;
 __decorate([

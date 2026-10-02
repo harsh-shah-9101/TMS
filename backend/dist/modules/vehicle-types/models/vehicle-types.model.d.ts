@@ -4,9 +4,9 @@ export declare class VehicleType extends Model<VehicleType> {
     organizationId: string;
     name: string;
     code: string;
-    capacityTons: number;
-    volumeCuFt: number;
-    axleCount: number;
-    fuelType: string;
-    status: string;
+    capacityTons?: number;
+    volumeCuFt?: number;
+    axleCount?: number;
+    fuelType?: string;
+    status?: string;
 }

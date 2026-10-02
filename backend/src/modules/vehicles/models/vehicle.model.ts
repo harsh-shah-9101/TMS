@@ -45,50 +45,50 @@ export class Vehicle extends Model<Vehicle> {
     allowNull: true,
     field: 'chassis_number',
   })
-  declare chassisNumber: string;
+  declare chassisNumber?: string;
 
   @Column({
     type: DataType.STRING(100),
     allowNull: true,
     field: 'engine_number',
   })
-  declare engineNumber: string;
+  declare engineNumber?: string;
 
   @Column({
     type: DataType.STRING(50),
     allowNull: true,
   })
-  declare make: string;
+  declare make?: string;
 
   @Column({
     type: DataType.STRING(50),
     allowNull: true,
   })
-  declare model: string;
+  declare model?: string;
 
   @Column({
     type: DataType.INTEGER,
     allowNull: true,
   })
-  declare year: number;
+  declare year?: number;
 
   @Column({
     type: DataType.STRING(50),
     allowNull: true,
     field: 'ownership_type',
   })
-  declare ownershipType: string;
+  declare ownershipType?: string;
 
   @Column({
     type: DataType.FLOAT,
     defaultValue: 0,
     field: 'current_odometer',
   })
-  declare currentOdometer: number;
+  declare currentOdometer?: number;
 
   @Column({
     type: DataType.STRING(50),
     defaultValue: 'AVAILABLE',
   })
-  declare status: string;
+  declare status?: string;
 }

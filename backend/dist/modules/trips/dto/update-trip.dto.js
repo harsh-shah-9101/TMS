@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UpdateTripDto = void 0;
 class UpdateTripDto {
+    tripNumber;
     routeId;
     vehicleId;
     driverId;
@@ -12,6 +13,7 @@ class UpdateTripDto {
     startOdometer;
     endOdometer;
     remarks;
+    stops;
 }
 exports.UpdateTripDto = UpdateTripDto;
 //# sourceMappingURL=update-trip.dto.js.map

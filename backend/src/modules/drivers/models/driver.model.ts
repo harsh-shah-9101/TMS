@@ -40,28 +40,28 @@ export class Driver extends Model<Driver> {
     type: DataType.STRING(20),
     allowNull: true,
   })
-  declare phone: string;
+  declare phone?: string;
 
   @Column({
     type: DataType.STRING(50),
     allowNull: true,
     field: 'license_number',
   })
-  declare licenseNumber: string;
+  declare licenseNumber?: string;
 
   @Column({
     type: DataType.STRING(50),
     allowNull: true,
     field: 'license_category',
   })
-  declare licenseCategory: string;
+  declare licenseCategory?: string;
 
   @Column({
     type: DataType.DATE,
     allowNull: true,
     field: 'license_expiry',
   })
-  declare licenseExpiry: Date;
+  declare licenseExpiry?: Date;
 
   @ForeignKey(() => User)
   @Column({
@@ -69,14 +69,14 @@ export class Driver extends Model<Driver> {
     allowNull: true,
     field: 'user_id',
   })
-  declare userId: string;
+  declare userId?: string;
 
   @BelongsTo(() => User)
-  declare user: User;
+  declare user?: User;
 
   @Column({
     type: DataType.STRING(50),
     defaultValue: 'AVAILABLE',
   })
-  declare status: string;
+  declare status?: string;
 }

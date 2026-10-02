@@ -6,12 +6,12 @@ export declare class Vehicle extends Model<Vehicle> {
     vehicleTypeId: string;
     vehicleType: VehicleType;
     registrationNumber: string;
-    chassisNumber: string;
-    engineNumber: string;
-    make: string;
-    model: string;
-    year: number;
-    ownershipType: string;
-    currentOdometer: number;
-    status: string;
+    chassisNumber?: string;
+    engineNumber?: string;
+    make?: string;
+    model?: string;
+    year?: number;
+    ownershipType?: string;
+    currentOdometer?: number;
+    status?: string;
 }
