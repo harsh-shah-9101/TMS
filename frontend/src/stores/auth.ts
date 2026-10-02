@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import api from '../config/api'
+import router from '../router'
 
 const TOKEN_KEY = 'tms_token'
 const USER_KEY = 'tms_user'
@@ -11,6 +12,19 @@ if (_oldToken && !localStorage.getItem(TOKEN_KEY)) {
   localStorage.setItem(TOKEN_KEY, _oldToken)
   localStorage.removeItem('token')
 }
+
+// ── Global 401 interceptor (placed here to avoid circular dep in api.ts) ──────
+api.interceptors.response.use(
+  (res) => res,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem(TOKEN_KEY)
+      localStorage.removeItem(USER_KEY)
+      router.push('/auth/login')
+    }
+    return Promise.reject(error)
+  }
+)
 
 export const useAuthStore = defineStore('auth', () => {
   // ── State ──────────────────────────────────────────────────────────────────
