@@ -2,9 +2,9 @@
 import { ref, onMounted, watch } from 'vue'
 import { useQuasar } from 'quasar'
 import api from '@/config/api'
-import DeskForm from '@/desk/desk/framework/form/DeskForm.vue'
-import DeskField from '@/desk/desk/framework/form/DeskField.vue'
-import type { DeskIssue } from '@/desk/desk/framework/form/issues'
+import TmsField from '@/components/form/TmsField.vue'
+import TmsCombo from '@/components/form/TmsCombo.vue'
+import { useTmsFormFocus } from '@/composables/useTmsFormFocus'
 
 const $q = useQuasar()
 
@@ -23,6 +23,10 @@ const search = ref('')
 const activeTab = ref('ALL')  // always start on All Parties
 
 const pagination = ref({ page: 1, rowsPerPage: 10, rowsNumber: 0 })
+
+// ─── Keyboard-first form focus ────────────────────────────────────────────────
+const formContainerRef = ref<HTMLElement | null>(null)
+const { focusNext, focusPrev, focusInitial } = useTmsFormFocus(formContainerRef)
 
 // ─── KPIs ─────────────────────────────────────────────────────────────────────
 const kpis = ref([
@@ -128,6 +132,7 @@ const openCreateDialog = () => {
   editingId.value = null
   form.value = emptyForm()
   showDialog.value = true
+  focusInitial()
 }
 
 // ─── Edit ────────────────────────────────────────────────────────────────────
@@ -150,23 +155,11 @@ const openEditDialog = (row: any) => {
     status: row.status || 'ACTIVE',
   }
   showDialog.value = true
-}
-
-const formIssues = ref<DeskIssue[]>([])
-
-const validate = () => {
-  const issues: DeskIssue[] = []
-  if (!form.value.name) issues.push({ fieldId: 'name', message: 'Required' })
-  if (!form.value.code) issues.push({ fieldId: 'code', message: 'Required' })
-  if (!form.value.type) issues.push({ fieldId: 'type', message: 'Required' })
-  if (!form.value.status) issues.push({ fieldId: 'status', message: 'Required' })
-  formIssues.value = issues
-  return issues.length === 0
+  focusInitial()
 }
 
 // ─── Submit ───────────────────────────────────────────────────────────────────
 const onSubmit = async () => {
-  if (!validate()) return
   submitting.value = true
   try {
     if (isEditMode.value && editingId.value) {
@@ -327,50 +320,171 @@ onMounted(() => refreshAll())
         </q-card-section>
 
         <q-card-section class="col scroll q-pa-lg">
-          <DeskForm id="partyForm" :issues="formIssues" @save="onSubmit" data-desk-layer>
-            
+          <div ref="formContainerRef">
+          <q-form id="partyForm" @submit.prevent="onSubmit">
+
+            <!-- Identity -->
             <div class="form-section-label">Identity</div>
-            <DeskField class="q-mb-md" fieldId="name" label="Party Name" v-model="form.name" required initial />
+            <TmsField
+              field-id="party-name"
+              label="Party Name"
+              v-model="form.name"
+              :required="true"
+              :initial="true"
+              placeholder="e.g. Reliance Industries Ltd"
+              :focus-next="focusNext"
+              :focus-prev="focusPrev"
+              class="q-mb-md"
+            />
 
             <div class="row q-col-gutter-sm q-mb-md">
               <div class="col-6">
-                <DeskField fieldId="code" label="Party Code" v-model="form.code" required :readonly="isEditMode" />
+                <TmsField
+                  field-id="party-code"
+                  label="Party Code"
+                  v-model="form.code"
+                  :required="true"
+                  :readonly="isEditMode"
+                  :hint="isEditMode ? 'Code cannot be changed' : 'Auto-generated'"
+                  placeholder="RIL-001"
+                  :focus-next="focusNext"
+                  :focus-prev="focusPrev"
+                />
               </div>
               <div class="col-6">
-                <DeskField fieldId="type" kind="select" label="Type" :options="typeOptions" v-model="form.type" required />
+                <TmsCombo
+                  field-id="party-type"
+                  label="Type"
+                  v-model="form.type"
+                  :options="typeOptions"
+                  :required="true"
+                  :focus-next="focusNext"
+                  :focus-prev="focusPrev"
+                />
               </div>
             </div>
 
+            <!-- Tax -->
             <q-separator class="q-mb-md" />
             <div class="form-section-label">Tax & Compliance</div>
             <div class="row q-col-gutter-sm q-mb-md">
-              <div class="col-7"><DeskField fieldId="gstin" label="GSTIN" v-model="form.gstin" /></div>
-              <div class="col-5"><DeskField fieldId="pan" label="PAN" v-model="form.pan" /></div>
+              <div class="col-7">
+                <TmsField
+                  field-id="party-gstin"
+                  label="GSTIN"
+                  v-model="form.gstin"
+                  placeholder="27AAAAA0000A1Z5"
+                  maxlength="15"
+                  :focus-next="focusNext"
+                  :focus-prev="focusPrev"
+                />
+              </div>
+              <div class="col-5">
+                <TmsField
+                  field-id="party-pan"
+                  label="PAN"
+                  v-model="form.pan"
+                  placeholder="AAAAA0000A"
+                  maxlength="10"
+                  :focus-next="focusNext"
+                  :focus-prev="focusPrev"
+                />
+              </div>
             </div>
 
+            <!-- Contact -->
             <q-separator class="q-mb-md" />
             <div class="form-section-label">Contact Details</div>
             <div class="row q-col-gutter-sm q-mb-md">
-              <div class="col-6"><DeskField fieldId="phone" label="Phone" v-model="form.phone" /></div>
-              <div class="col-6"><DeskField fieldId="email" label="Email" v-model="form.email" /></div>
+              <div class="col-6">
+                <TmsField
+                  field-id="party-phone"
+                  label="Phone"
+                  v-model="form.phone"
+                  type="tel"
+                  placeholder="98765XXXXX"
+                  :focus-next="focusNext"
+                  :focus-prev="focusPrev"
+                />
+              </div>
+              <div class="col-6">
+                <TmsField
+                  field-id="party-email"
+                  label="Email"
+                  v-model="form.email"
+                  type="email"
+                  placeholder="logistics@company.com"
+                  :focus-next="focusNext"
+                  :focus-prev="focusPrev"
+                />
+              </div>
             </div>
 
+            <!-- Address -->
             <q-separator class="q-mb-md" />
             <div class="form-section-label">Address</div>
-            <DeskField class="q-mb-sm" fieldId="addressLine1" label="Address Line 1" v-model="form.addressLine1" />
-            <DeskField class="q-mb-md" fieldId="addressLine2" label="Address Line 2" v-model="form.addressLine2" />
+            <TmsField
+              field-id="party-addr1"
+              label="Address Line 1"
+              v-model="form.addressLine1"
+              :focus-next="focusNext"
+              :focus-prev="focusPrev"
+              class="q-mb-sm"
+            />
+            <TmsField
+              field-id="party-addr2"
+              label="Address Line 2"
+              v-model="form.addressLine2"
+              :focus-next="focusNext"
+              :focus-prev="focusPrev"
+              class="q-mb-md"
+            />
             <div class="row q-col-gutter-sm q-mb-md">
-              <div class="col-4"><DeskField fieldId="city" label="City" v-model="form.city" /></div>
-              <div class="col-5">
-                <DeskField fieldId="state" kind="select" label="State" :options="indianStates.map(s => ({label: s, value: s}))" v-model="form.state" />
+              <div class="col-4">
+                <TmsField
+                  field-id="party-city"
+                  label="City"
+                  v-model="form.city"
+                  :focus-next="focusNext"
+                  :focus-prev="focusPrev"
+                />
               </div>
-              <div class="col-3"><DeskField fieldId="pincode" label="Pincode" v-model="form.pincode" /></div>
+              <div class="col-5">
+                <TmsCombo
+                  field-id="party-state"
+                  label="State"
+                  v-model="form.state"
+                  :options="indianStates.map(s => ({ label: s, value: s }))"
+                  :focus-next="focusNext"
+                  :focus-prev="focusPrev"
+                />
+              </div>
+              <div class="col-3">
+                <TmsField
+                  field-id="party-pincode"
+                  label="Pincode"
+                  v-model="form.pincode"
+                  maxlength="6"
+                  :focus-next="focusNext"
+                  :focus-prev="focusPrev"
+                />
+              </div>
             </div>
 
+            <!-- Status -->
             <q-separator class="q-mb-md" />
-            <DeskField fieldId="status" kind="select" label="Status" :options="statusOptions" v-model="form.status" required />
+            <TmsCombo
+              field-id="party-status"
+              label="Status"
+              v-model="form.status"
+              :options="statusOptions"
+              :required="true"
+              :focus-next="focusNext"
+              :focus-prev="focusPrev"
+            />
 
-          </DeskForm>
+          </q-form>
+          </div>
         </q-card-section>
 
         <q-card-section class="row justify-end items-center q-py-sm q-px-lg" style="border-top:1px solid #f0f0f0;background:#fafafa;">
