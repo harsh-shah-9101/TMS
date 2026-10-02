@@ -10,6 +10,7 @@ permissions: {}
 jobs:
   notify:
     runs-on: ubuntu-latest
+
     steps:
       - name: Send commit message to Discord
         env:
@@ -20,30 +21,27 @@ jobs:
           COMMIT_HASH: ${{ github.sha }}
           REPO_NAME: ${{ github.repository }}
           COMMITS_JSON: ${{ toJson(github.event.commits) }}
+
         run: |
-          TIMESTAMP=$(TZ='Asia/Kolkata' date +"%Y-%m-%d %H:%M:%S IST")
-          DAY=$(TZ='Asia/Kolkata' date +"%A")
+          TIMESTAMP=$(TZ='Asia/Kolkata' date '+%Y-%m-%d %H:%M:%S IST')
+          DAY=$(TZ='Asia/Kolkata' date '+%A')
+
           COMMIT_URL_PREFIX="https://github.com/${REPO_NAME}/commit"
 
-          COMMITS_LIST=(printf'%s'"COMMITS_JSON" | jq -rj \
+          COMMITS_LIST=$(printf '%s' "$COMMITS_JSON" | jq -r \
             --arg url "$COMMIT_URL_PREFIX" \
             '
-              [(. // []) | reverse | to_entries[] |
-              "- [" + (.value.id[0:7]) + "](" + $url + "/" + .value.id + ") " +
-              (
-                if   .key == 0 then .value.message
-                elif .key == 1 then (.value.message | split("\n") | .[0:3] | join("\n"))
-                elif .key == 2 then (.value.message | split("\n") | .[0:2] | join("\n"))
-                else                 ((.value.message | split("\n")[0]) + " ...")
-                end
-              )
-            ] | join("\n")
+              (. // [])
+              | reverse
+              | .[]
+              | "- [" + .id[0:7] + "](" + $url + "/" + .id + ") " +
+                (.message | split("\n")[0])
             ' 2>/dev/null || true)
 
           if [ -z "$COMMITS_LIST" ]; then
             SHORT_HASH="${COMMIT_HASH:0:7}"
-            COMMIT_URL="COMMITURLPREFIX/{COMMIT_HASH}"
-            COMMITS_LIST="- [SHORTHASH]({COMMIT_URL}) ${COMMIT_MSG}"
+            COMMIT_URL="${COMMIT_URL_PREFIX}/${COMMIT_HASH}"
+            COMMITS_LIST="- [${SHORT_HASH}](${COMMIT_URL}) ${COMMIT_MSG}"
           fi
 
           jq -n \
@@ -54,14 +52,23 @@ jobs:
             --arg branch "$BRANCH" \
             --arg commits "$COMMITS_LIST" \
             '{
-              content: (
-                "**Repo:** `\($repo)`\n" +
-                "**By:** \($author)\n" +
-                "**Day:** \($day)\n" +
-                "**Time:** \($timestamp)\n" +
-                "**From:** `\($branch)`\n" +
-                "**Commits:**\n\($commits)"
-              )
+              content:
+                ("*Repo:* " + $repo + "\n" +
+                 "*By:* " + $author + "\n" +
+                 "*Day:* " + $day + "\n" +
+                 "*Time:* " + $timestamp + "\n" +
+                 "*From:* " + $branch + "\n" +
+                 "*Commits:*\n" + $commits)
             }
-            | .content |= (if length > 2000 then .[0:1990] + "\n…" else . end)' \
-          | curl -fsS -H "Content-Type: application/json" -X POST -d @- "$DISCORD_WEBHOOK"
+            | .content |= (
+                if length > 2000
+                then .[0:1990] + "\n…"
+                else .
+                end
+            )' > payload.json
+
+          curl -fsS \
+            -H "Content-Type: application/json" \
+            -X POST \
+            -d @payload.json \
+            "$DISCORD_WEBHOOK"
