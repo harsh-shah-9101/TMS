@@ -47,6 +47,13 @@ function onKeydown(e: KeyboardEvent) {
     e.preventDefault()
     if (e.shiftKey) props.focusPrev(props.fieldId)
     else props.focusNext(props.fieldId)
+  } else if (e.key === 'ArrowLeft') {
+    // Go to previous field only when cursor is at the very beginning
+    const input = e.target as HTMLInputElement
+    if (input.selectionStart === 0 && input.selectionEnd === 0) {
+      e.preventDefault()
+      props.focusPrev(props.fieldId)
+    }
   }
 }
 </script>

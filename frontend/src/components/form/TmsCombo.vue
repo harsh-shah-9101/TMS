@@ -112,6 +112,13 @@ function onType(e: Event) {
 }
 
 function onKeydown(e: KeyboardEvent) {
+  // ArrowLeft when dropdown closed → previous field
+  if (e.key === 'ArrowLeft' && !open.value) {
+    e.preventDefault()
+    props.focusPrev(props.fieldId)
+    return
+  }
+
   if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
     e.preventDefault()
     accepted.value = false
