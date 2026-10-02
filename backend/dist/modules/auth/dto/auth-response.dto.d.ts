@@ -4,7 +4,7 @@ export declare class UserResponseDto {
     email: string;
     firstName: string;
     lastName: string;
-    phone: string | null;
+    phone?: string | null;
     organizationId: string;
     role: RoleName;
 }

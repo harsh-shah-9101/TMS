@@ -25,7 +25,7 @@ export class RolesService implements OnModuleInit {
     for (const roleData of roles) {
       const [role, created] = await this.roleModel.findOrCreate({
         where: { name: roleData.name },
-        defaults: roleData,
+        defaults: roleData as any,
       });
       if (!created) {
         await role.update(roleData);

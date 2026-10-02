@@ -39,7 +39,7 @@ export class VehicleTypesService {
       axleCount: dto.axleCount,
       fuelType: dto.fuelType,
       status: dto.status,
-    });
+    } as any);
   }
 
   async findAll(organizationId: string, query: QueryVehicleTypeDto) {

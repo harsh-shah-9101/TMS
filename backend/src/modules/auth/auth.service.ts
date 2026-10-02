@@ -142,7 +142,7 @@ export class AuthService {
     await user.update({
       refreshToken: hashedRefreshToken,
       lastLoginAt: new Date(),
-    });
+    } as any);
 
     return {
       accessToken: tokens.accessToken,

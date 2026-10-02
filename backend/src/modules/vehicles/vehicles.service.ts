@@ -60,7 +60,7 @@ export class VehiclesService {
       status: dto.status,
       ownershipType: dto.ownershipType,
       currentOdometer: dto.currentOdometer || 0,
-    });
+    } as any);
   }
 
   async findAll(organizationId: string, query: QueryVehicleDto) {

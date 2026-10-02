@@ -15,7 +15,7 @@ export class UserResponseDto {
   lastName: string;
 
   @ApiProperty({ nullable: true })
-  phone: string | null;
+  phone?: string | null;
 
   @ApiProperty()
   organizationId: string;
