@@ -64,7 +64,7 @@ export class AuthService {
         name: dto.organizationName,
         code: dto.organizationCode,
         status: OrganizationStatus.ACTIVE,
-      }, { transaction: tx });
+      } as any, { transaction: tx });
 
       const user = await this.userModel.create({
         organizationId: org.id,
@@ -76,7 +76,7 @@ export class AuthService {
         phone: dto.phone,
         status: UserStatus.ACTIVE,
         lastLoginAt: new Date(),
-      }, { transaction: tx });
+      } as any, { transaction: tx });
 
       return { org, user };
     });
@@ -121,7 +121,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or password');
     }
 
-    if (user.status !== UserStatus.ACTIVE || user.organization.status !== OrganizationStatus.ACTIVE) {
+    if (user.status !== UserStatus.ACTIVE || user.organization!.status !== OrganizationStatus.ACTIVE) {
       throw new UnauthorizedException('User or organization account is deactivated');
     }
 
@@ -133,7 +133,7 @@ export class AuthService {
     const tokens = await this.generateTokens({
       sub: user.id,
       organizationId: user.organizationId,
-      role: user.role.name as string,
+      role: user.role!.name as any,
       email: user.email,
     });
 
@@ -154,7 +154,7 @@ export class AuthService {
         lastName: user.lastName,
         phone: user.phone,
         organizationId: user.organizationId,
-        role: user.role.name as string,
+        role: user.role!.name as any,
       },
     };
   }
@@ -192,7 +192,7 @@ export class AuthService {
     const tokens = await this.generateTokens({
       sub: user.id,
       organizationId: user.organizationId,
-      role: user.role.name as string,
+      role: user.role!.name as any,
       email: user.email,
     });
 
@@ -204,7 +204,7 @@ export class AuthService {
 
   async logout(userId: string, organizationId: string): Promise<{ message: string }> {
     await this.userModel.update(
-      { refreshToken: null },
+      { refreshToken: null as any },
       {
         where: {
           id: userId,
@@ -267,7 +267,7 @@ export class AuthService {
     const hashedNewPassword = await bcrypt.hash(dto.newPassword, this.saltRounds);
     await user.update({
       password: hashedNewPassword,
-      refreshToken: null,
+      refreshToken: null as any,
     });
 
     return { message: 'Password updated successfully' };

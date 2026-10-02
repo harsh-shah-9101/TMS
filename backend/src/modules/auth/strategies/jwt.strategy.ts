@@ -40,7 +40,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       ],
     });
 
-    if (!user || user.status !== UserStatus.ACTIVE || user.organization.status !== OrganizationStatus.ACTIVE) {
+    if (!user || user.status !== UserStatus.ACTIVE || user.organization!.status !== OrganizationStatus.ACTIVE) {
       throw new UnauthorizedException('User or organization is inactive or unauthorized');
     }
 
@@ -48,7 +48,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       userId: user.id,
       email: user.email,
       organizationId: user.organizationId,
-      role: user.role.name,
+      role: user.role!.name,
     };
   }
 }

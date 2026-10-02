@@ -87,7 +87,8 @@ export declare enum LRStatus {
     GENERATED = "GENERATED",
     IN_TRANSIT = "IN_TRANSIT",
     DELIVERED = "DELIVERED",
-    CANCELLED = "CANCELLED"
+    CANCELLED = "CANCELLED",
+    ISSUED = "ISSUED"
 }
 export declare enum CustomerStatus {
     ACTIVE = "ACTIVE",
@@ -107,14 +108,6 @@ export declare enum DispatchStatus {
     COMPLETED = "COMPLETED",
     CANCELLED = "CANCELLED",
     GATE_OUT = "GATE_OUT"
-}
-export declare enum LRStatus {
-    DRAFT = "DRAFT",
-    GENERATED = "GENERATED",
-    IN_TRANSIT = "IN_TRANSIT",
-    DELIVERED = "DELIVERED",
-    CANCELLED = "CANCELLED",
-    ISSUED = "ISSUED"
 }
 export declare enum CarrierStatus {
     ACTIVE = "ACTIVE",

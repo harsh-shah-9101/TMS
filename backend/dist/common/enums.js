@@ -104,6 +104,7 @@ var LRStatus;
     LRStatus["IN_TRANSIT"] = "IN_TRANSIT";
     LRStatus["DELIVERED"] = "DELIVERED";
     LRStatus["CANCELLED"] = "CANCELLED";
+    LRStatus["ISSUED"] = "ISSUED";
 })(LRStatus || (exports.LRStatus = LRStatus = {}));
 var CustomerStatus;
 (function (CustomerStatus) {
@@ -127,14 +128,6 @@ var DispatchStatus;
     DispatchStatus["CANCELLED"] = "CANCELLED";
     DispatchStatus["GATE_OUT"] = "GATE_OUT";
 })(DispatchStatus || (exports.DispatchStatus = DispatchStatus = {}));
-(function (LRStatus) {
-    LRStatus["DRAFT"] = "DRAFT";
-    LRStatus["GENERATED"] = "GENERATED";
-    LRStatus["IN_TRANSIT"] = "IN_TRANSIT";
-    LRStatus["DELIVERED"] = "DELIVERED";
-    LRStatus["CANCELLED"] = "CANCELLED";
-    LRStatus["ISSUED"] = "ISSUED";
-})(LRStatus || (exports.LRStatus = LRStatus = {}));
 var CarrierStatus;
 (function (CarrierStatus) {
     CarrierStatus["ACTIVE"] = "ACTIVE";

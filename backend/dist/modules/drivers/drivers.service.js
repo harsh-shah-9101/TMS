@@ -54,7 +54,7 @@ let DriversService = class DriversService {
             phone: dto.phone,
             licenseNumber: formattedLicense,
             licenseCategory: dto.licenseCategory,
-            licenseExpiry: dto.licenseExpiry ? new Date(dto.licenseExpiry) : null,
+            licenseExpiry: (dto.licenseExpiry ? new Date(dto.licenseExpiry) : null),
             userId: dto.userId,
             status: dto.status,
         });
@@ -149,7 +149,7 @@ let DriversService = class DriversService {
             ...(formattedLicense && { licenseNumber: formattedLicense }),
             ...(dto.licenseCategory !== undefined && { licenseCategory: dto.licenseCategory }),
             ...(dto.licenseExpiry !== undefined && {
-                licenseExpiry: dto.licenseExpiry ? new Date(dto.licenseExpiry) : null,
+                licenseExpiry: (dto.licenseExpiry ? new Date(dto.licenseExpiry) : null),
             }),
             ...(dto.userId !== undefined && { userId: dto.userId }),
             ...(dto.status && { status: dto.status }),

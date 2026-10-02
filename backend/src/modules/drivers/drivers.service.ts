@@ -57,10 +57,10 @@ export class DriversService {
       phone: dto.phone,
       licenseNumber: formattedLicense,
       licenseCategory: dto.licenseCategory,
-      licenseExpiry: dto.licenseExpiry ? new Date(dto.licenseExpiry) : null,
+      licenseExpiry: (dto.licenseExpiry ? new Date(dto.licenseExpiry) : null) as any,
       userId: dto.userId,
       status: dto.status,
-    });
+    } as any);
   }
 
   async findAll(organizationId: string, query: QueryDriverDto) {
@@ -170,7 +170,7 @@ export class DriversService {
       ...(formattedLicense && { licenseNumber: formattedLicense }),
       ...(dto.licenseCategory !== undefined && { licenseCategory: dto.licenseCategory }),
       ...(dto.licenseExpiry !== undefined && {
-        licenseExpiry: dto.licenseExpiry ? new Date(dto.licenseExpiry) : null,
+        licenseExpiry: (dto.licenseExpiry ? new Date(dto.licenseExpiry) : null) as any,
       }),
       ...(dto.userId !== undefined && { userId: dto.userId }),
       ...(dto.status && { status: dto.status }),
