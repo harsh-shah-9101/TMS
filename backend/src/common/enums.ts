@@ -110,9 +110,8 @@ export enum CustomerStatus {
 }
 
 export enum CustomerType {
-  REGULAR = 'REGULAR',
-  CORPORATE = 'CORPORATE',
-  INDIVIDUAL = 'INDIVIDUAL',
+  SHIPPER = 'SHIPPER',
+  CONSIGNEE = 'CONSIGNEE',
   BOTH = 'BOTH',
 }
 

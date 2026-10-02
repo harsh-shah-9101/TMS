@@ -114,9 +114,8 @@ var CustomerStatus;
 })(CustomerStatus || (exports.CustomerStatus = CustomerStatus = {}));
 var CustomerType;
 (function (CustomerType) {
-    CustomerType["REGULAR"] = "REGULAR";
-    CustomerType["CORPORATE"] = "CORPORATE";
-    CustomerType["INDIVIDUAL"] = "INDIVIDUAL";
+    CustomerType["SHIPPER"] = "SHIPPER";
+    CustomerType["CONSIGNEE"] = "CONSIGNEE";
     CustomerType["BOTH"] = "BOTH";
 })(CustomerType || (exports.CustomerType = CustomerType = {}));
 var DispatchStatus;

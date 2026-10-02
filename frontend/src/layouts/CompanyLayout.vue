@@ -199,6 +199,7 @@ const menu = [
               clickable
               v-ripple
               :to="item.to"
+              :exact="item.to === '/'"
               active-class="bg-cyan-1 text-primary text-weight-medium"
               class="q-mx-sm q-mb-xs rounded-borders"
               style="min-height: 40px; padding: 0 12px;"

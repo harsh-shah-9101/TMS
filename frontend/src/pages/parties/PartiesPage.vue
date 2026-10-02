@@ -17,7 +17,7 @@ const deleteTarget = ref<any>(null)
 
 const rows = ref<any[]>([])
 const search = ref('')
-const activeTab = ref('ALL')
+const activeTab = ref('ALL')  // always start on All Parties
 
 const pagination = ref({ page: 1, rowsPerPage: 10, rowsNumber: 0 })
 
@@ -81,6 +81,22 @@ watch(() => form.value.name, (val) => {
   }
 })
 
+// ─── Fetch real KPI counts from backend ──────────────────────────────────────
+const fetchKpis = async () => {
+  try {
+    const [allRes, shipperRes, consigneeRes, inactiveRes] = await Promise.all([
+      api.get('/customers', { params: { page: 1, limit: 1 } }),
+      api.get('/customers', { params: { page: 1, limit: 1, type: 'SHIPPER' } }),
+      api.get('/customers', { params: { page: 1, limit: 1, type: 'CONSIGNEE' } }),
+      api.get('/customers', { params: { page: 1, limit: 1, status: 'INACTIVE' } }),
+    ])
+    kpis.value[0].value = String(allRes.data.meta?.total || 0)
+    kpis.value[1].value = String(shipperRes.data.meta?.total || 0)
+    kpis.value[2].value = String(consigneeRes.data.meta?.total || 0)
+    kpis.value[3].value = String(inactiveRes.data.meta?.total || 0)
+  } catch { /* silent */ }
+}
+
 // ─── Fetch ────────────────────────────────────────────────────────────────────
 const fetchData = async (props?: any) => {
   const page = props?.pagination?.page || pagination.value.page
@@ -94,12 +110,6 @@ const fetchData = async (props?: any) => {
     })
     rows.value = res.data.data || []
     pagination.value = { page, rowsPerPage: limit, rowsNumber: res.data.meta?.total || 0 }
-
-    const all = rows.value as any[]
-    kpis.value[0].value = String(pagination.value.rowsNumber)
-    kpis.value[1].value = String(all.filter(r => r.type === 'SHIPPER').length)
-    kpis.value[2].value = String(all.filter(r => r.type === 'CONSIGNEE').length)
-    kpis.value[3].value = String(all.filter(r => r.status === 'INACTIVE').length)
   } catch (err: any) {
     $q.notify({ type: 'negative', message: err.response?.data?.message || 'Failed to fetch parties' })
   } finally {
@@ -152,7 +162,7 @@ const onSubmit = async () => {
     }
     showDialog.value = false
     form.value = emptyForm()
-    fetchData()
+    refreshAll()
   } catch (err: any) {
     $q.notify({ type: 'negative', message: err.response?.data?.message || 'Operation failed' })
   } finally {
@@ -174,15 +184,19 @@ const onDelete = async () => {
     $q.notify({ type: 'positive', message: `Party "${deleteTarget.value.name}" deleted` })
     showDeleteDialog.value = false
     deleteTarget.value = null
-    fetchData()
+    refreshAll()
   } catch (err: any) {
     $q.notify({ type: 'negative', message: err.response?.data?.message || 'Delete failed' })
   } finally {
     deleting.value = false
   }
 }
+const refreshAll = () => {
+  fetchData()
+  fetchKpis()
+}
 
-onMounted(() => fetchData())
+onMounted(() => refreshAll())
 </script>
 
 <template>

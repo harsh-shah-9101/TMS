@@ -5,4 +5,4 @@ export interface UserPayload {
     organizationId: string;
     role: RoleName;
 }
-export declare const CurrentUser: (...dataOrPipes: (import("@nestjs/common").PipeTransform<any, any> | keyof UserPayload | import("@nestjs/common").ParameterDecoratorOptions | import("@nestjs/common").Type<import("@nestjs/common").PipeTransform<any, any>> | undefined)[]) => ParameterDecorator;
+export declare const CurrentUser: (...dataOrPipes: (keyof UserPayload | import("@nestjs/common").ParameterDecoratorOptions | import("@nestjs/common").PipeTransform<any, any> | import("@nestjs/common").Type<import("@nestjs/common").PipeTransform<any, any>> | undefined)[]) => ParameterDecorator;

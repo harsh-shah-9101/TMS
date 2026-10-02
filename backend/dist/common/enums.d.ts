@@ -96,9 +96,8 @@ export declare enum CustomerStatus {
     SUSPENDED = "SUSPENDED"
 }
 export declare enum CustomerType {
-    REGULAR = "REGULAR",
-    CORPORATE = "CORPORATE",
-    INDIVIDUAL = "INDIVIDUAL",
+    SHIPPER = "SHIPPER",
+    CONSIGNEE = "CONSIGNEE",
     BOTH = "BOTH"
 }
 export declare enum DispatchStatus {
