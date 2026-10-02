@@ -7,7 +7,7 @@ import {
   IsString,
   Min,
 } from 'class-validator';
-import { RouteStatus } from '@prisma/client';
+import { RouteStatus } from '../../../common/enums';
 
 export class CreateRouteDto {
   @ApiProperty({ example: 'Mumbai to Bengaluru Express Corridor', description: 'Route display name' })

@@ -1,4 +1,4 @@
-import { RoleName } from '@prisma/client';
+import { RoleName } from '../../../common/enums';
 export declare class UserResponseDto {
     id: string;
     email: string;

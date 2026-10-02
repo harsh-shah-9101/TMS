@@ -8,12 +8,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var _a, _b;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateLrDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
-const client_1 = require("@prisma/client");
+const enums_1 = require("../../../common/enums");
 class CreateLrDto {
     shipmentId;
     lrNumber;
@@ -67,13 +66,13 @@ __decorate([
 ], CreateLrDto.prototype, "consigneeAddress", void 0);
 __decorate([
     (0, swagger_1.ApiPropertyOptional)({
-        enum: client_1.FreightTerm,
-        default: client_1.FreightTerm.TO_PAY,
+        enum: enums_1.FreightTerm,
+        default: enums_1.FreightTerm.TO_PAY,
         description: 'Freight Payment Terms (PAID, TO_PAY, TO_BE_BILLED)',
     }),
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsEnum)(client_1.FreightTerm),
-    __metadata("design:type", typeof (_a = typeof client_1.FreightTerm !== "undefined" && client_1.FreightTerm) === "function" ? _a : Object)
+    (0, class_validator_1.IsEnum)(enums_1.FreightTerm),
+    __metadata("design:type", String)
 ], CreateLrDto.prototype, "freightTerms", void 0);
 __decorate([
     (0, swagger_1.ApiPropertyOptional)({ example: 40000.0, default: 0, description: 'Basic Freight Charge' }),
@@ -104,12 +103,12 @@ __decorate([
 ], CreateLrDto.prototype, "remarks", void 0);
 __decorate([
     (0, swagger_1.ApiPropertyOptional)({
-        enum: client_1.LRStatus,
-        default: client_1.LRStatus.ISSUED,
+        enum: enums_1.LRStatus,
+        default: enums_1.LRStatus.ISSUED,
         description: 'LR Document Status (ISSUED, CANCELLED)',
     }),
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsEnum)(client_1.LRStatus),
-    __metadata("design:type", typeof (_b = typeof client_1.LRStatus !== "undefined" && client_1.LRStatus) === "function" ? _b : Object)
+    (0, class_validator_1.IsEnum)(enums_1.LRStatus),
+    __metadata("design:type", String)
 ], CreateLrDto.prototype, "status", void 0);
 //# sourceMappingURL=create-lr.dto.js.map

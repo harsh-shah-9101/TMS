@@ -1,5 +1,5 @@
 import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { TripStatus } from '@prisma/client';
+import { TripStatus } from '../../../common/enums';
 
 export class UpdateTripStatusDto {
   @IsEnum(TripStatus)

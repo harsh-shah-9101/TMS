@@ -1,4 +1,4 @@
-import { CarrierStatus } from '@prisma/client';
+import { CarrierStatus } from '../../../common/enums';
 export declare class CreateCarrierDto {
     name: string;
     code: string;

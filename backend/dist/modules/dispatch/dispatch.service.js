@@ -22,7 +22,7 @@ const vehicle_model_1 = require("../vehicles/models/vehicle.model");
 const driver_model_1 = require("../drivers/models/driver.model");
 const route_model_1 = require("../routes/models/route.model");
 const trip_stop_model_1 = require("../trips/models/trip-stop.model");
-const client_1 = require("@prisma/client");
+const enums_1 = require("../../common/enums");
 let DispatchService = class DispatchService {
     dispatchModel;
     tripModel;
@@ -52,19 +52,19 @@ let DispatchService = class DispatchService {
                 tripId: dto.tripId,
                 dispatchNumber: formattedDispatchNo,
                 gatePassNumber: dto.gatePassNumber,
-                status: dto.status || client_1.DispatchStatus.DISPATCHED,
+                status: dto.status || enums_1.DispatchStatus.DISPATCHED,
                 dispatchedByUserId: userId,
                 remarks: dto.remarks,
             });
             await this.tripModel.update({
-                status: client_1.TripStatus.DISPATCHED,
+                status: enums_1.TripStatus.DISPATCHED,
                 actualStartDate: trip.actualStartDate || new Date(),
             }, { where: { id: dto.tripId } });
             if (trip.vehicleId) {
-                await this.vehicleModel.update({ status: client_1.VehicleStatus.IN_TRANSIT }, { where: { id: trip.vehicleId } });
+                await this.vehicleModel.update({ status: enums_1.VehicleStatus.IN_TRANSIT }, { where: { id: trip.vehicleId } });
             }
             if (trip.driverId) {
-                await this.driverModel.update({ status: client_1.DriverStatus.ON_TRIP }, { where: { id: trip.driverId } });
+                await this.driverModel.update({ status: enums_1.DriverStatus.ON_TRIP }, { where: { id: trip.driverId } });
             }
             return this.findOne(organizationId, dispatch.id);
         }
@@ -147,11 +147,11 @@ let DispatchService = class DispatchService {
         if (dto.remarks)
             updateData.remarks = dto.remarks;
         await this.dispatchModel.update(updateData, { where: { id } });
-        if (dto.status === client_1.DispatchStatus.CANCELLED) {
-            await this.tripModel.update({ status: client_1.TripStatus.PLANNED }, { where: { id: dispatch.tripId } });
+        if (dto.status === enums_1.DispatchStatus.CANCELLED) {
+            await this.tripModel.update({ status: enums_1.TripStatus.PLANNED }, { where: { id: dispatch.tripId } });
         }
-        else if (dto.status === client_1.DispatchStatus.GATE_OUT) {
-            await this.tripModel.update({ status: client_1.TripStatus.IN_TRANSIT }, { where: { id: dispatch.tripId } });
+        else if (dto.status === enums_1.DispatchStatus.GATE_OUT) {
+            await this.tripModel.update({ status: enums_1.TripStatus.IN_TRANSIT }, { where: { id: dispatch.tripId } });
         }
         return this.findOne(organizationId, id);
     }

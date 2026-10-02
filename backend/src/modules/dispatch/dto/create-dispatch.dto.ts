@@ -1,5 +1,5 @@
 import { IsString, IsNotEmpty, IsOptional, IsEnum, IsUUID } from 'class-validator';
-import { DispatchStatus } from '@prisma/client';
+import { DispatchStatus } from '../../../common/enums';
 
 export class CreateDispatchDto {
   @IsUUID()

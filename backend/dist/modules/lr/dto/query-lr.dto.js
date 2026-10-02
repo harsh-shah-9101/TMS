@@ -8,13 +8,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var _a, _b;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.QueryLrDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 const class_transformer_1 = require("class-transformer");
-const client_1 = require("@prisma/client");
+const enums_1 = require("../../../common/enums");
 class QueryLrDto {
     search;
     status;
@@ -31,16 +30,16 @@ __decorate([
     __metadata("design:type", String)
 ], QueryLrDto.prototype, "search", void 0);
 __decorate([
-    (0, swagger_1.ApiPropertyOptional)({ enum: client_1.LRStatus, description: 'Filter by LR status' }),
+    (0, swagger_1.ApiPropertyOptional)({ enum: enums_1.LRStatus, description: 'Filter by LR status' }),
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsEnum)(client_1.LRStatus),
-    __metadata("design:type", typeof (_a = typeof client_1.LRStatus !== "undefined" && client_1.LRStatus) === "function" ? _a : Object)
+    (0, class_validator_1.IsEnum)(enums_1.LRStatus),
+    __metadata("design:type", String)
 ], QueryLrDto.prototype, "status", void 0);
 __decorate([
-    (0, swagger_1.ApiPropertyOptional)({ enum: client_1.FreightTerm, description: 'Filter by freight payment terms' }),
+    (0, swagger_1.ApiPropertyOptional)({ enum: enums_1.FreightTerm, description: 'Filter by freight payment terms' }),
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsEnum)(client_1.FreightTerm),
-    __metadata("design:type", typeof (_b = typeof client_1.FreightTerm !== "undefined" && client_1.FreightTerm) === "function" ? _b : Object)
+    (0, class_validator_1.IsEnum)(enums_1.FreightTerm),
+    __metadata("design:type", String)
 ], QueryLrDto.prototype, "freightTerms", void 0);
 __decorate([
     (0, swagger_1.ApiPropertyOptional)({ description: 'Filter by shipment ID' }),

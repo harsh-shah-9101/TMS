@@ -1,0 +1,129 @@
+export enum RoleName {
+  SUPER_ADMIN = 'SUPER_ADMIN',
+  ADMIN = 'ADMIN',
+  TRANSPORT_MANAGER = 'TRANSPORT_MANAGER',
+  DISPATCHER = 'DISPATCHER',
+  FLEET_MANAGER = 'FLEET_MANAGER',
+  ACCOUNTS = 'ACCOUNTS',
+  DRIVER = 'DRIVER',
+  VIEWER = 'VIEWER',
+}
+
+export enum OwnershipType {
+  OWNED = 'OWNED',
+  LEASED = 'LEASED',
+  MARKET = 'MARKET',
+}
+
+export enum VehicleStatus {
+  AVAILABLE = 'AVAILABLE',
+  IN_TRANSIT = 'IN_TRANSIT',
+  MAINTENANCE = 'MAINTENANCE',
+  OUT_OF_SERVICE = 'OUT_OF_SERVICE',
+  ASSIGNED = 'ASSIGNED',
+}
+
+export enum FuelType {
+  DIESEL = 'DIESEL',
+  PETROL = 'PETROL',
+  CNG = 'CNG',
+  ELECTRIC = 'ELECTRIC',
+  OTHER = 'OTHER',
+}
+
+export enum VehicleTypeStatus {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+}
+
+export enum DriverStatus {
+  AVAILABLE = 'AVAILABLE',
+  ON_TRIP = 'ON_TRIP',
+  ON_LEAVE = 'ON_LEAVE',
+  INACTIVE = 'INACTIVE',
+  ASSIGNED = 'ASSIGNED',
+}
+
+export enum TripStatus {
+  DRAFT = 'DRAFT',
+  PLANNED = 'PLANNED',
+  DISPATCHED = 'DISPATCHED',
+  IN_TRANSIT = 'IN_TRANSIT',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED',
+  ASSIGNED = 'ASSIGNED',
+  PAUSED = 'PAUSED',
+}
+
+export enum StopStatus {
+  PENDING = 'PENDING',
+  ARRIVED = 'ARRIVED',
+  DEPARTED = 'DEPARTED',
+  SKIPPED = 'SKIPPED',
+}
+
+export enum StopType {
+  PICKUP = 'PICKUP',
+  DELIVERY = 'DELIVERY',
+  REST = 'REST',
+  FUEL = 'FUEL',
+  WEIGH = 'WEIGH',
+  OTHER = 'OTHER',
+}
+
+export enum ShipmentStatus {
+  DRAFT = 'DRAFT',
+  BOOKED = 'BOOKED',
+  IN_TRANSIT = 'IN_TRANSIT',
+  DELIVERED = 'DELIVERED',
+  CANCELLED = 'CANCELLED',
+  CREATED = 'CREATED',
+  VALIDATED = 'VALIDATED',
+  PLANNED = 'PLANNED',
+  ASSIGNED = 'ASSIGNED',
+}
+
+export enum RouteStatus {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+}
+
+export enum FreightTerm {
+  PREPAID = 'PREPAID',
+  TO_PAY = 'TO_PAY',
+  TO_BE_BILLED = 'TO_BE_BILLED',
+}
+
+export enum LRStatus {
+  DRAFT = 'DRAFT',
+  GENERATED = 'GENERATED',
+  IN_TRANSIT = 'IN_TRANSIT',
+  DELIVERED = 'DELIVERED',
+  CANCELLED = 'CANCELLED',
+}
+
+export enum CustomerStatus {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  SUSPENDED = 'SUSPENDED',
+}
+
+export enum CustomerType {
+  REGULAR = 'REGULAR',
+  CORPORATE = 'CORPORATE',
+  INDIVIDUAL = 'INDIVIDUAL',
+}
+
+export enum DispatchStatus {
+  DRAFT = 'DRAFT',
+  ASSIGNED = 'ASSIGNED',
+  DISPATCHED = 'DISPATCHED',
+  COMPLETED = 'COMPLETED',
+  CANCELLED = 'CANCELLED',
+}
+
+export enum CarrierStatus {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  BLACKLISTED = 'BLACKLISTED',
+}

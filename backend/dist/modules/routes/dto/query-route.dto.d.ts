@@ -1,4 +1,4 @@
-import { RouteStatus } from '@prisma/client';
+import { RouteStatus } from '../../../common/enums';
 export declare class QueryRouteDto {
     search?: string;
     status?: RouteStatus;

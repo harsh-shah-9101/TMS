@@ -1,4 +1,4 @@
-import { RouteStatus } from '@prisma/client';
+import { RouteStatus } from '../../../common/enums';
 export declare class CreateRouteDto {
     name: string;
     code: string;

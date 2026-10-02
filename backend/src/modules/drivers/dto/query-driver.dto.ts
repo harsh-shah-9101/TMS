@@ -1,7 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsInt, IsOptional, IsString, Min } from 'class-validator';
 import { Type } from 'class-transformer';
-import { DriverStatus } from '@prisma/client';
+import { DriverStatus } from '../../../common/enums';
 
 export class QueryDriverDto {
   @ApiPropertyOptional({ description: 'Search term for first name, last name, phone, or license number' })

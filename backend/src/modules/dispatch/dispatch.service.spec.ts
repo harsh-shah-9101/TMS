@@ -6,7 +6,7 @@ import { Trip } from '../trips/models/trip.model';
 import { Vehicle } from '../vehicles/models/vehicle.model';
 import { Driver } from '../drivers/models/driver.model';
 import { ConflictException, NotFoundException } from '@nestjs/common';
-import { DispatchStatus, TripStatus } from '@prisma/client';
+import { DispatchStatus, TripStatus } from '../../common/enums';
 
 describe('DispatchService', () => {
   let service: DispatchService;

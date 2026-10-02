@@ -7,7 +7,7 @@ import {
   IsUUID,
   Min,
 } from 'class-validator';
-import { StopType, StopStatus } from '@prisma/client';
+import { StopType, StopStatus } from '../../../common/enums';
 
 export class CreateTripStopDto {
   @IsOptional()

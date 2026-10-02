@@ -19,7 +19,7 @@ const sequelize_2 = require("sequelize");
 const shipment_model_1 = require("./models/shipment.model");
 const shipment_item_model_1 = require("./models/shipment-item.model");
 const customer_model_1 = require("../customers/models/customer.model");
-const client_1 = require("@prisma/client");
+const enums_1 = require("../../common/enums");
 let ShipmentsService = class ShipmentsService {
     shipmentModel;
     customerModel;
@@ -28,14 +28,14 @@ let ShipmentsService = class ShipmentsService {
         this.customerModel = customerModel;
     }
     allowedTransitions = {
-        [client_1.ShipmentStatus.DRAFT]: [client_1.ShipmentStatus.CREATED, client_1.ShipmentStatus.CANCELLED],
-        [client_1.ShipmentStatus.CREATED]: [client_1.ShipmentStatus.VALIDATED, client_1.ShipmentStatus.PLANNED, client_1.ShipmentStatus.CANCELLED],
-        [client_1.ShipmentStatus.VALIDATED]: [client_1.ShipmentStatus.PLANNED, client_1.ShipmentStatus.CANCELLED],
-        [client_1.ShipmentStatus.PLANNED]: [client_1.ShipmentStatus.ASSIGNED, client_1.ShipmentStatus.CANCELLED],
-        [client_1.ShipmentStatus.ASSIGNED]: [client_1.ShipmentStatus.IN_TRANSIT, client_1.ShipmentStatus.CANCELLED],
-        [client_1.ShipmentStatus.IN_TRANSIT]: [client_1.ShipmentStatus.DELIVERED, client_1.ShipmentStatus.CANCELLED],
-        [client_1.ShipmentStatus.DELIVERED]: [],
-        [client_1.ShipmentStatus.CANCELLED]: [],
+        [enums_1.ShipmentStatus.DRAFT]: [enums_1.ShipmentStatus.CREATED, enums_1.ShipmentStatus.CANCELLED],
+        [enums_1.ShipmentStatus.CREATED]: [enums_1.ShipmentStatus.VALIDATED, enums_1.ShipmentStatus.PLANNED, enums_1.ShipmentStatus.CANCELLED],
+        [enums_1.ShipmentStatus.VALIDATED]: [enums_1.ShipmentStatus.PLANNED, enums_1.ShipmentStatus.CANCELLED],
+        [enums_1.ShipmentStatus.PLANNED]: [enums_1.ShipmentStatus.ASSIGNED, enums_1.ShipmentStatus.CANCELLED],
+        [enums_1.ShipmentStatus.ASSIGNED]: [enums_1.ShipmentStatus.IN_TRANSIT, enums_1.ShipmentStatus.CANCELLED],
+        [enums_1.ShipmentStatus.IN_TRANSIT]: [enums_1.ShipmentStatus.DELIVERED, enums_1.ShipmentStatus.CANCELLED],
+        [enums_1.ShipmentStatus.DELIVERED]: [],
+        [enums_1.ShipmentStatus.CANCELLED]: [],
     };
     async create(organizationId, dto) {
         const formattedBookingNo = dto.bookingNumber.replace(/\s+/g, '').toUpperCase();
@@ -80,7 +80,7 @@ let ShipmentsService = class ShipmentsService {
                 destinationPincode: dto.destinationPincode,
                 pickupDate: dto.pickupDate ? new Date(dto.pickupDate) : null,
                 expectedDeliveryDate: dto.expectedDeliveryDate ? new Date(dto.expectedDeliveryDate) : null,
-                status: dto.status || client_1.ShipmentStatus.CREATED,
+                status: dto.status || enums_1.ShipmentStatus.CREATED,
                 totalWeightKg,
                 totalVolumeCuFt,
                 freightAmount: dto.freightAmount || 0,

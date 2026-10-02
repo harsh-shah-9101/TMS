@@ -1,4 +1,4 @@
-import { StopType, StopStatus } from '@prisma/client';
+import { StopType, StopStatus } from '../../../common/enums';
 export declare class CreateTripStopDto {
     sequence?: number;
     shipmentId?: string;

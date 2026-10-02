@@ -13,7 +13,7 @@ import { CreateShipmentDto } from './dto/create-shipment.dto';
 import { UpdateShipmentDto } from './dto/update-shipment.dto';
 import { UpdateShipmentStatusDto } from './dto/update-shipment-status.dto';
 import { QueryShipmentDto } from './dto/query-shipment.dto';
-import { ShipmentStatus } from '@prisma/client'; // keeping this for DTO compatibility
+import { ShipmentStatus } from '../../common/enums'; // keeping this for DTO compatibility
 
 @Injectable()
 export class ShipmentsService {

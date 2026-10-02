@@ -1,4 +1,4 @@
-import { DriverStatus } from '@prisma/client';
+import { DriverStatus } from '../../../common/enums';
 export declare class QueryDriverDto {
     search?: string;
     status?: DriverStatus;

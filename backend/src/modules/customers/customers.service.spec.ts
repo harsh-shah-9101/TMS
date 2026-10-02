@@ -3,7 +3,7 @@ import { CustomersService } from './customers.service';
 import { getModelToken } from '@nestjs/sequelize';
 import { Customer } from './models/customer.model';
 import { ConflictException, NotFoundException } from '@nestjs/common';
-import { CustomerStatus, CustomerType } from '@prisma/client';
+import { CustomerStatus, CustomerType } from '../../common/enums';
 
 describe('CustomersService', () => {
   let service: CustomersService;

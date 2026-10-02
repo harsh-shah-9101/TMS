@@ -1,6 +1,6 @@
 import { IsOptional, IsString, IsEnum, IsInt, IsUUID, Min } from 'class-validator';
 import { Type } from 'class-transformer';
-import { DispatchStatus } from '@prisma/client';
+import { DispatchStatus } from '../../../common/enums';
 
 export class QueryDispatchDto {
   @IsOptional()

@@ -23,7 +23,7 @@ const jwt_auth_guard_1 = require("../../common/guards/jwt-auth.guard");
 const roles_guard_1 = require("../../common/guards/roles.guard");
 const roles_decorator_1 = require("../../common/decorators/roles.decorator");
 const current_user_decorator_1 = require("../../common/decorators/current-user.decorator");
-const client_1 = require("@prisma/client");
+const enums_1 = require("../../common/enums");
 let DriversController = class DriversController {
     driversService;
     constructor(driversService) {
@@ -49,7 +49,7 @@ exports.DriversController = DriversController;
 __decorate([
     (0, common_1.Post)(),
     (0, common_1.HttpCode)(common_1.HttpStatus.CREATED),
-    (0, roles_decorator_1.Roles)(client_1.RoleName.ADMIN, client_1.RoleName.FLEET_MANAGER, client_1.RoleName.TRANSPORT_MANAGER),
+    (0, roles_decorator_1.Roles)(enums_1.RoleName.ADMIN, enums_1.RoleName.FLEET_MANAGER, enums_1.RoleName.TRANSPORT_MANAGER),
     (0, swagger_1.ApiOperation)({ summary: 'Register a new driver' }),
     (0, swagger_1.ApiResponse)({ status: 201, description: 'Driver registered successfully' }),
     (0, swagger_1.ApiResponse)({ status: 400, description: 'Bad request / invalid user account link' }),
@@ -63,7 +63,7 @@ __decorate([
 __decorate([
     (0, common_1.Get)(),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
-    (0, roles_decorator_1.Roles)(client_1.RoleName.ADMIN, client_1.RoleName.FLEET_MANAGER, client_1.RoleName.TRANSPORT_MANAGER, client_1.RoleName.DISPATCHER, client_1.RoleName.VIEWER),
+    (0, roles_decorator_1.Roles)(enums_1.RoleName.ADMIN, enums_1.RoleName.FLEET_MANAGER, enums_1.RoleName.TRANSPORT_MANAGER, enums_1.RoleName.DISPATCHER, enums_1.RoleName.VIEWER),
     (0, swagger_1.ApiOperation)({ summary: 'List drivers with filtering and pagination' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Paginated list of drivers' }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
@@ -75,7 +75,7 @@ __decorate([
 __decorate([
     (0, common_1.Get)(':id'),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
-    (0, roles_decorator_1.Roles)(client_1.RoleName.ADMIN, client_1.RoleName.FLEET_MANAGER, client_1.RoleName.TRANSPORT_MANAGER, client_1.RoleName.DISPATCHER, client_1.RoleName.VIEWER),
+    (0, roles_decorator_1.Roles)(enums_1.RoleName.ADMIN, enums_1.RoleName.FLEET_MANAGER, enums_1.RoleName.TRANSPORT_MANAGER, enums_1.RoleName.DISPATCHER, enums_1.RoleName.VIEWER),
     (0, swagger_1.ApiOperation)({ summary: 'Get driver details by ID' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Driver details' }),
     (0, swagger_1.ApiResponse)({ status: 404, description: 'Driver not found' }),
@@ -88,7 +88,7 @@ __decorate([
 __decorate([
     (0, common_1.Patch)(':id'),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
-    (0, roles_decorator_1.Roles)(client_1.RoleName.ADMIN, client_1.RoleName.FLEET_MANAGER, client_1.RoleName.TRANSPORT_MANAGER),
+    (0, roles_decorator_1.Roles)(enums_1.RoleName.ADMIN, enums_1.RoleName.FLEET_MANAGER, enums_1.RoleName.TRANSPORT_MANAGER),
     (0, swagger_1.ApiOperation)({ summary: 'Update driver details' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Driver updated successfully' }),
     (0, swagger_1.ApiResponse)({ status: 404, description: 'Driver not found' }),
@@ -103,7 +103,7 @@ __decorate([
 __decorate([
     (0, common_1.Delete)(':id'),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
-    (0, roles_decorator_1.Roles)(client_1.RoleName.ADMIN, client_1.RoleName.FLEET_MANAGER),
+    (0, roles_decorator_1.Roles)(enums_1.RoleName.ADMIN, enums_1.RoleName.FLEET_MANAGER),
     (0, swagger_1.ApiOperation)({ summary: 'Soft delete driver' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Driver deleted successfully' }),
     (0, swagger_1.ApiResponse)({ status: 404, description: 'Driver not found' }),

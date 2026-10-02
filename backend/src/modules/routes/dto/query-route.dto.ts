@@ -1,7 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsInt, IsOptional, IsString, Min } from 'class-validator';
 import { Type } from 'class-transformer';
-import { RouteStatus } from '@prisma/client';
+import { RouteStatus } from '../../../common/enums';
 
 export class QueryRouteDto {
   @ApiPropertyOptional({ description: 'Search term for name, code, origin, or destination' })

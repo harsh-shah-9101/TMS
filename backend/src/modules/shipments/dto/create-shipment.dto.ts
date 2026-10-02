@@ -12,7 +12,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { ShipmentStatus } from '@prisma/client';
+import { ShipmentStatus } from '../../../common/enums';
 import { CreateShipmentItemDto } from './create-shipment-item.dto';
 
 export class CreateShipmentDto {

@@ -23,7 +23,7 @@ export class Role extends Model<Role> {
     defaultValue: DataType.UUIDV4,
     primaryKey: true,
   })
-  id: string;
+  declare id: string;
 
   @Column({
     type: DataType.ENUM(...Object.values(RoleName)),

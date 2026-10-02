@@ -1,7 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsInt, IsOptional, IsString, IsUUID, Min } from 'class-validator';
 import { Type } from 'class-transformer';
-import { VehicleStatus, OwnershipType } from '@prisma/client';
+import { VehicleStatus, OwnershipType } from '../../../common/enums';
 
 export class QueryVehicleDto {
   @ApiPropertyOptional({ description: 'Search term for registration number, make, or model' })

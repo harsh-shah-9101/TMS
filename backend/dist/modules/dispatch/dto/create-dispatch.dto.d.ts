@@ -1,4 +1,4 @@
-import { DispatchStatus } from '@prisma/client';
+import { DispatchStatus } from '../../../common/enums';
 export declare class CreateDispatchDto {
     tripId: string;
     dispatchNumber: string;

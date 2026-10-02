@@ -19,7 +19,7 @@ import { UpdateTripStatusDto } from './dto/update-trip-status.dto';
 import { QueryTripDto } from './dto/query-trip.dto';
 import { CreateTripStopDto } from './dto/create-trip-stop.dto';
 import { UpdateTripStopStatusDto } from './dto/update-trip-stop-status.dto';
-import { TripStatus, VehicleStatus, DriverStatus } from '@prisma/client';
+import { TripStatus, VehicleStatus, DriverStatus } from '../../common/enums';
 
 @Injectable()
 export class TripsService {

@@ -149,22 +149,18 @@ let changedCount = 0;
 for (const file of allTsFiles) {
   let content = fs.readFileSync(file, 'utf8');
   if (content.includes('@prisma/client')) {
-    // We need to replace import { ... } from '@prisma/client' with import { ... } from 'relative/path/to/enums'
-    
-    // Determine relative path from this file to src/common/enums.ts
     const relativePathToCommon = path.relative(path.dirname(file), path.join(srcDir, 'common', 'enums'));
     let importPath = relativePathToCommon.replace(/\\/g, '/');
     if (!importPath.startsWith('.')) {
       importPath = './' + importPath;
     }
     
-    // Replace '@prisma/client' with the relative path
-    content = content.replace(/from\s+['"]@prisma\/client['"]/g, \`from '\${importPath}'\`);
+    content = content.replace(/from\s+['"]@prisma\/client['"]/g, "from '" + importPath + "'");
     
     fs.writeFileSync(file, content);
-    console.log(\`Updated \${file}\`);
+    console.log("Updated " + file);
     changedCount++;
   }
 }
 
-console.log(\`Updated \${changedCount} files.\`);
+console.log("Updated " + changedCount + " files.");

@@ -6,7 +6,7 @@ import {
   ConflictException,
   NotFoundException,
 } from '@nestjs/common';
-import { OwnershipType, VehicleStatus } from '@prisma/client';
+import { OwnershipType, VehicleStatus } from '../../common/enums';
 
 describe('VehiclesService', () => {
   let service: VehiclesService;

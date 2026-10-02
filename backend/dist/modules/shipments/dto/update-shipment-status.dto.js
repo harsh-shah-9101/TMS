@@ -8,23 +8,22 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UpdateShipmentStatusDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
-const client_1 = require("@prisma/client");
+const enums_1 = require("../../../common/enums");
 class UpdateShipmentStatusDto {
     status;
 }
 exports.UpdateShipmentStatusDto = UpdateShipmentStatusDto;
 __decorate([
     (0, swagger_1.ApiProperty)({
-        enum: client_1.ShipmentStatus,
+        enum: enums_1.ShipmentStatus,
         description: 'Target status (DRAFT, CREATED, VALIDATED, PLANNED, ASSIGNED, IN_TRANSIT, DELIVERED, CANCELLED)',
     }),
-    (0, class_validator_1.IsEnum)(client_1.ShipmentStatus),
+    (0, class_validator_1.IsEnum)(enums_1.ShipmentStatus),
     (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", typeof (_a = typeof client_1.ShipmentStatus !== "undefined" && client_1.ShipmentStatus) === "function" ? _a : Object)
+    __metadata("design:type", String)
 ], UpdateShipmentStatusDto.prototype, "status", void 0);
 //# sourceMappingURL=update-shipment-status.dto.js.map

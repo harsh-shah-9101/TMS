@@ -3,7 +3,7 @@ import { RoutesService } from './routes.service';
 import { getModelToken } from '@nestjs/sequelize';
 import { Route } from './models/route.model';
 import { ConflictException, NotFoundException } from '@nestjs/common';
-import { RouteStatus } from '@prisma/client';
+import { RouteStatus } from '../../common/enums';
 
 describe('RoutesService', () => {
   let service: RoutesService;

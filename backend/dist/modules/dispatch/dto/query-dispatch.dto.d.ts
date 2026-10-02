@@ -1,4 +1,4 @@
-import { DispatchStatus } from '@prisma/client';
+import { DispatchStatus } from '../../../common/enums';
 export declare class QueryDispatchDto {
     search?: string;
     status?: DispatchStatus;

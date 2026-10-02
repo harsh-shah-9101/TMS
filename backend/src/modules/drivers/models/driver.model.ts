@@ -1,4 +1,5 @@
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import { Column, DataType, Model, Table, ForeignKey, BelongsTo } from 'sequelize-typescript';
+import { User } from '../../users/models/user.model';
 
 @Table({
   tableName: 'drivers',
@@ -36,7 +37,45 @@ export class Driver extends Model<Driver> {
   declare lastName: string;
 
   @Column({
-    type: DataType.ENUM('AVAILABLE', 'ASSIGNED', 'ON_TRIP', 'ON_LEAVE', 'INACTIVE'),
+    type: DataType.STRING(20),
+    allowNull: true,
+  })
+  declare phone: string;
+
+  @Column({
+    type: DataType.STRING(50),
+    allowNull: true,
+    field: 'license_number',
+  })
+  declare licenseNumber: string;
+
+  @Column({
+    type: DataType.STRING(50),
+    allowNull: true,
+    field: 'license_category',
+  })
+  declare licenseCategory: string;
+
+  @Column({
+    type: DataType.DATE,
+    allowNull: true,
+    field: 'license_expiry',
+  })
+  declare licenseExpiry: Date;
+
+  @ForeignKey(() => User)
+  @Column({
+    type: DataType.UUID,
+    allowNull: true,
+    field: 'user_id',
+  })
+  declare userId: string;
+
+  @BelongsTo(() => User)
+  declare user: User;
+
+  @Column({
+    type: DataType.STRING(50),
     defaultValue: 'AVAILABLE',
   })
   declare status: string;

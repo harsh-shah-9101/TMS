@@ -8,7 +8,7 @@ import {
   ConflictException,
   NotFoundException,
 } from '@nestjs/common';
-import { ShipmentStatus } from '@prisma/client';
+import { ShipmentStatus } from '../../common/enums';
 
 describe('ShipmentsService', () => {
   let service: ShipmentsService;

@@ -20,7 +20,7 @@ export class User extends Model<User> {
     defaultValue: DataType.UUIDV4,
     primaryKey: true,
   })
-  id: string;
+  declare id: string;
 
   @ForeignKey(() => Organization)
   @Column({

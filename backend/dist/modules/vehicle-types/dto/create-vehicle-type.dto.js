@@ -8,12 +8,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var _a, _b;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateVehicleTypeDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
-const client_1 = require("@prisma/client");
+const enums_1 = require("../../../common/enums");
 class CreateVehicleTypeDto {
     name;
     code;
@@ -58,22 +57,22 @@ __decorate([
 ], CreateVehicleTypeDto.prototype, "axleCount", void 0);
 __decorate([
     (0, swagger_1.ApiPropertyOptional)({
-        enum: client_1.FuelType,
-        default: client_1.FuelType.DIESEL,
+        enum: enums_1.FuelType,
+        default: enums_1.FuelType.DIESEL,
         description: 'Fuel type used by vehicle category',
     }),
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsEnum)(client_1.FuelType),
-    __metadata("design:type", typeof (_a = typeof client_1.FuelType !== "undefined" && client_1.FuelType) === "function" ? _a : Object)
+    (0, class_validator_1.IsEnum)(enums_1.FuelType),
+    __metadata("design:type", String)
 ], CreateVehicleTypeDto.prototype, "fuelType", void 0);
 __decorate([
     (0, swagger_1.ApiPropertyOptional)({
-        enum: client_1.VehicleTypeStatus,
-        default: client_1.VehicleTypeStatus.ACTIVE,
+        enum: enums_1.VehicleTypeStatus,
+        default: enums_1.VehicleTypeStatus.ACTIVE,
         description: 'Operational status of vehicle type',
     }),
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsEnum)(client_1.VehicleTypeStatus),
-    __metadata("design:type", typeof (_b = typeof client_1.VehicleTypeStatus !== "undefined" && client_1.VehicleTypeStatus) === "function" ? _b : Object)
+    (0, class_validator_1.IsEnum)(enums_1.VehicleTypeStatus),
+    __metadata("design:type", String)
 ], CreateVehicleTypeDto.prototype, "status", void 0);
 //# sourceMappingURL=create-vehicle-type.dto.js.map

@@ -3,7 +3,7 @@ import { CarriersService } from './carriers.service';
 import { getModelToken } from '@nestjs/sequelize';
 import { Carrier } from './models/carrier.model';
 import { ConflictException, NotFoundException } from '@nestjs/common';
-import { CarrierStatus } from '@prisma/client';
+import { CarrierStatus } from '../../common/enums';
 
 describe('CarriersService', () => {
   let service: CarriersService;

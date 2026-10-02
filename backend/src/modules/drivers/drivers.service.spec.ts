@@ -6,7 +6,7 @@ import {
   ConflictException,
   NotFoundException,
 } from '@nestjs/common';
-import { DriverStatus } from '@prisma/client';
+import { DriverStatus } from '../../common/enums';
 
 describe('DriversService', () => {
   let service: DriversService;

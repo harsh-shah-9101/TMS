@@ -20,7 +20,7 @@ export class Organization extends Model<Organization> {
     defaultValue: DataType.UUIDV4,
     primaryKey: true,
   })
-  id: string;
+  declare id: string;
 
   @Column({
     type: DataType.STRING(255),

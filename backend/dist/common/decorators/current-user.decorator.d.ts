@@ -1,4 +1,4 @@
-import { RoleName } from '@prisma/client';
+import { RoleName } from '../enums';
 export interface UserPayload {
     userId: string;
     email: string;

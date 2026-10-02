@@ -15,7 +15,7 @@ import { TripStop } from '../trips/models/trip-stop.model';
 import { CreateDispatchDto } from './dto/create-dispatch.dto';
 import { UpdateDispatchStatusDto } from './dto/update-dispatch-status.dto';
 import { QueryDispatchDto } from './dto/query-dispatch.dto';
-import { DispatchStatus, TripStatus, VehicleStatus, DriverStatus } from '@prisma/client';
+import { DispatchStatus, TripStatus, VehicleStatus, DriverStatus } from '../../common/enums';
 
 @Injectable()
 export class DispatchService {

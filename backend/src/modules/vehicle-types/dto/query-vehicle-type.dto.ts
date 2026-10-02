@@ -1,7 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsInt, IsOptional, IsString, Min } from 'class-validator';
 import { Type } from 'class-transformer';
-import { VehicleTypeStatus, FuelType } from '@prisma/client';
+import { VehicleTypeStatus, FuelType } from '../../../common/enums';
 
 export class QueryVehicleTypeDto {
   @ApiPropertyOptional({ description: 'Search term for name or code' })

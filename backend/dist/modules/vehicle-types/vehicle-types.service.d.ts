@@ -5,18 +5,18 @@ import { QueryVehicleTypeDto } from './dto/query-vehicle-type.dto';
 export declare class VehicleTypesService {
     private vehicleTypeModel;
     constructor(vehicleTypeModel: typeof VehicleType);
-    create(organizationId: string, dto: CreateVehicleTypeDto): Promise<any>;
+    create(organizationId: string, dto: CreateVehicleTypeDto): Promise<VehicleType>;
     findAll(organizationId: string, query: QueryVehicleTypeDto): Promise<{
-        data: any;
+        data: VehicleType[];
         meta: {
-            total: any;
+            total: number;
             page: number;
             limit: number;
             totalPages: number;
         };
     }>;
-    findOne(organizationId: string, id: string): Promise<any>;
-    update(organizationId: string, id: string, dto: UpdateVehicleTypeDto): Promise<any>;
+    findOne(organizationId: string, id: string): Promise<VehicleType>;
+    update(organizationId: string, id: string, dto: UpdateVehicleTypeDto): Promise<VehicleType>;
     remove(organizationId: string, id: string): Promise<{
         message: string;
     }>;

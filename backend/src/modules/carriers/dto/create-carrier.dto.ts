@@ -10,7 +10,7 @@ import {
   Max,
   Min,
 } from 'class-validator';
-import { CarrierStatus } from '@prisma/client';
+import { CarrierStatus } from '../../../common/enums';
 
 export class CreateCarrierDto {
   @ApiProperty({ example: 'VRL Logistics Ltd', description: 'Transporter / Carrier legal name' })

@@ -23,7 +23,7 @@ const vehicle_model_1 = require("../vehicles/models/vehicle.model");
 const driver_model_1 = require("../drivers/models/driver.model");
 const carrier_model_1 = require("../carriers/models/carrier.model");
 const shipment_model_1 = require("../shipments/models/shipment.model");
-const client_1 = require("@prisma/client");
+const enums_1 = require("../../common/enums");
 let TripsService = class TripsService {
     tripModel;
     tripStopModel;
@@ -42,13 +42,13 @@ let TripsService = class TripsService {
         this.shipmentModel = shipmentModel;
     }
     allowedTransitions = {
-        [client_1.TripStatus.PLANNED]: [client_1.TripStatus.ASSIGNED, client_1.TripStatus.CANCELLED],
-        [client_1.TripStatus.ASSIGNED]: [client_1.TripStatus.DISPATCHED, client_1.TripStatus.IN_TRANSIT, client_1.TripStatus.CANCELLED],
-        [client_1.TripStatus.DISPATCHED]: [client_1.TripStatus.IN_TRANSIT, client_1.TripStatus.PAUSED, client_1.TripStatus.CANCELLED],
-        [client_1.TripStatus.IN_TRANSIT]: [client_1.TripStatus.PAUSED, client_1.TripStatus.COMPLETED, client_1.TripStatus.CANCELLED],
-        [client_1.TripStatus.PAUSED]: [client_1.TripStatus.IN_TRANSIT, client_1.TripStatus.COMPLETED, client_1.TripStatus.CANCELLED],
-        [client_1.TripStatus.COMPLETED]: [],
-        [client_1.TripStatus.CANCELLED]: [],
+        [enums_1.TripStatus.PLANNED]: [enums_1.TripStatus.ASSIGNED, enums_1.TripStatus.CANCELLED],
+        [enums_1.TripStatus.ASSIGNED]: [enums_1.TripStatus.DISPATCHED, enums_1.TripStatus.IN_TRANSIT, enums_1.TripStatus.CANCELLED],
+        [enums_1.TripStatus.DISPATCHED]: [enums_1.TripStatus.IN_TRANSIT, enums_1.TripStatus.PAUSED, enums_1.TripStatus.CANCELLED],
+        [enums_1.TripStatus.IN_TRANSIT]: [enums_1.TripStatus.PAUSED, enums_1.TripStatus.COMPLETED, enums_1.TripStatus.CANCELLED],
+        [enums_1.TripStatus.PAUSED]: [enums_1.TripStatus.IN_TRANSIT, enums_1.TripStatus.COMPLETED, enums_1.TripStatus.CANCELLED],
+        [enums_1.TripStatus.COMPLETED]: [],
+        [enums_1.TripStatus.CANCELLED]: [],
     };
     async create(organizationId, dto) {
         const formattedTripNo = dto.tripNumber.replace(/\s+/g, '').toUpperCase();
@@ -116,7 +116,7 @@ let TripsService = class TripsService {
                 vehicleId: dto.vehicleId,
                 driverId: dto.driverId,
                 carrierId: dto.carrierId,
-                status: dto.status || client_1.TripStatus.PLANNED,
+                status: dto.status || enums_1.TripStatus.PLANNED,
                 plannedStartDate: dto.plannedStartDate ? new Date(dto.plannedStartDate) : null,
                 plannedEndDate: dto.plannedEndDate ? new Date(dto.plannedEndDate) : null,
                 startOdometer: dto.startOdometer,
@@ -127,10 +127,10 @@ let TripsService = class TripsService {
                 include: [{ model: trip_stop_model_1.TripStop, as: 'stops' }],
             });
             if (dto.vehicleId) {
-                await this.vehicleModel.update({ status: client_1.VehicleStatus.ASSIGNED }, { where: { id: dto.vehicleId } });
+                await this.vehicleModel.update({ status: enums_1.VehicleStatus.ASSIGNED }, { where: { id: dto.vehicleId } });
             }
             if (dto.driverId) {
-                await this.driverModel.update({ status: client_1.DriverStatus.ASSIGNED }, { where: { id: dto.driverId } });
+                await this.driverModel.update({ status: enums_1.DriverStatus.ASSIGNED }, { where: { id: dto.driverId } });
             }
             return this.findOne(organizationId, trip.id);
         }
@@ -295,31 +295,31 @@ let TripsService = class TripsService {
         };
         if (dto.remarks)
             updateData.remarks = dto.remarks;
-        if (dto.status === client_1.TripStatus.IN_TRANSIT && !trip.actualStartDate) {
+        if (dto.status === enums_1.TripStatus.IN_TRANSIT && !trip.actualStartDate) {
             updateData.actualStartDate = new Date();
         }
-        if ((dto.status === client_1.TripStatus.COMPLETED || dto.status === client_1.TripStatus.CANCELLED) && !trip.actualEndDate) {
+        if ((dto.status === enums_1.TripStatus.COMPLETED || dto.status === enums_1.TripStatus.CANCELLED) && !trip.actualEndDate) {
             updateData.actualEndDate = new Date();
         }
         await this.tripModel.update(updateData, { where: { id, organizationId } });
         if (trip.vehicleId) {
-            let vehicleStatus = client_1.VehicleStatus.AVAILABLE;
-            if (dto.status === client_1.TripStatus.ASSIGNED)
-                vehicleStatus = client_1.VehicleStatus.ASSIGNED;
-            else if (dto.status === client_1.TripStatus.IN_TRANSIT || dto.status === client_1.TripStatus.DISPATCHED)
-                vehicleStatus = client_1.VehicleStatus.IN_TRANSIT;
-            else if (dto.status === client_1.TripStatus.COMPLETED || dto.status === client_1.TripStatus.CANCELLED)
-                vehicleStatus = client_1.VehicleStatus.AVAILABLE;
+            let vehicleStatus = enums_1.VehicleStatus.AVAILABLE;
+            if (dto.status === enums_1.TripStatus.ASSIGNED)
+                vehicleStatus = enums_1.VehicleStatus.ASSIGNED;
+            else if (dto.status === enums_1.TripStatus.IN_TRANSIT || dto.status === enums_1.TripStatus.DISPATCHED)
+                vehicleStatus = enums_1.VehicleStatus.IN_TRANSIT;
+            else if (dto.status === enums_1.TripStatus.COMPLETED || dto.status === enums_1.TripStatus.CANCELLED)
+                vehicleStatus = enums_1.VehicleStatus.AVAILABLE;
             await this.vehicleModel.update({ status: vehicleStatus }, { where: { id: trip.vehicleId } });
         }
         if (trip.driverId) {
-            let driverStatus = client_1.DriverStatus.AVAILABLE;
-            if (dto.status === client_1.TripStatus.ASSIGNED)
-                driverStatus = client_1.DriverStatus.ASSIGNED;
-            else if (dto.status === client_1.TripStatus.IN_TRANSIT || dto.status === client_1.TripStatus.DISPATCHED)
-                driverStatus = client_1.DriverStatus.ON_TRIP;
-            else if (dto.status === client_1.TripStatus.COMPLETED || dto.status === client_1.TripStatus.CANCELLED)
-                driverStatus = client_1.DriverStatus.AVAILABLE;
+            let driverStatus = enums_1.DriverStatus.AVAILABLE;
+            if (dto.status === enums_1.TripStatus.ASSIGNED)
+                driverStatus = enums_1.DriverStatus.ASSIGNED;
+            else if (dto.status === enums_1.TripStatus.IN_TRANSIT || dto.status === enums_1.TripStatus.DISPATCHED)
+                driverStatus = enums_1.DriverStatus.ON_TRIP;
+            else if (dto.status === enums_1.TripStatus.COMPLETED || dto.status === enums_1.TripStatus.CANCELLED)
+                driverStatus = enums_1.DriverStatus.AVAILABLE;
             await this.driverModel.update({ status: driverStatus }, { where: { id: trip.driverId } });
         }
         return this.findOne(organizationId, id);

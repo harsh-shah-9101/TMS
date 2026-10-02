@@ -10,7 +10,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Type } from 'class-transformer';
-import { TripStatus } from '@prisma/client';
+import { TripStatus } from '../../../common/enums';
 import { CreateTripStopDto } from './create-trip-stop.dto';
 
 export class CreateTripDto {

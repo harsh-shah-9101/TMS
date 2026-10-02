@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Driver = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
+const user_model_1 = require("../../users/models/user.model");
 let Driver = class Driver extends sequelize_typescript_1.Model {
 };
 exports.Driver = Driver;
@@ -48,7 +49,51 @@ __decorate([
 ], Driver.prototype, "lastName", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.ENUM('AVAILABLE', 'ASSIGNED', 'ON_TRIP', 'ON_LEAVE', 'INACTIVE'),
+        type: sequelize_typescript_1.DataType.STRING(20),
+        allowNull: true,
+    }),
+    __metadata("design:type", String)
+], Driver.prototype, "phone", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.STRING(50),
+        allowNull: true,
+        field: 'license_number',
+    }),
+    __metadata("design:type", String)
+], Driver.prototype, "licenseNumber", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.STRING(50),
+        allowNull: true,
+        field: 'license_category',
+    }),
+    __metadata("design:type", String)
+], Driver.prototype, "licenseCategory", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.DATE,
+        allowNull: true,
+        field: 'license_expiry',
+    }),
+    __metadata("design:type", Date)
+], Driver.prototype, "licenseExpiry", void 0);
+__decorate([
+    (0, sequelize_typescript_1.ForeignKey)(() => user_model_1.User),
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.UUID,
+        allowNull: true,
+        field: 'user_id',
+    }),
+    __metadata("design:type", String)
+], Driver.prototype, "userId", void 0);
+__decorate([
+    (0, sequelize_typescript_1.BelongsTo)(() => user_model_1.User),
+    __metadata("design:type", user_model_1.User)
+], Driver.prototype, "user", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.STRING(50),
         defaultValue: 'AVAILABLE',
     }),
     __metadata("design:type", String)

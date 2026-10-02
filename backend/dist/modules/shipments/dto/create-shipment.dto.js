@@ -8,13 +8,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateShipmentDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 const class_transformer_1 = require("class-transformer");
-const client_1 = require("@prisma/client");
+const enums_1 = require("../../../common/enums");
 const create_shipment_item_dto_1 = require("./create-shipment-item.dto");
 class CreateShipmentDto {
     bookingNumber;
@@ -87,13 +86,13 @@ __decorate([
 ], CreateShipmentDto.prototype, "expectedDeliveryDate", void 0);
 __decorate([
     (0, swagger_1.ApiPropertyOptional)({
-        enum: client_1.ShipmentStatus,
-        default: client_1.ShipmentStatus.CREATED,
+        enum: enums_1.ShipmentStatus,
+        default: enums_1.ShipmentStatus.CREATED,
         description: 'Initial status (DRAFT, CREATED, VALIDATED)',
     }),
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsEnum)(client_1.ShipmentStatus),
-    __metadata("design:type", typeof (_a = typeof client_1.ShipmentStatus !== "undefined" && client_1.ShipmentStatus) === "function" ? _a : Object)
+    (0, class_validator_1.IsEnum)(enums_1.ShipmentStatus),
+    __metadata("design:type", String)
 ], CreateShipmentDto.prototype, "status", void 0);
 __decorate([
     (0, swagger_1.ApiPropertyOptional)({ example: 45000.0, default: 0, description: 'Agreed freight amount in INR' }),

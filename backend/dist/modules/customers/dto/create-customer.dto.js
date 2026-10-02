@@ -8,12 +8,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var _a, _b;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateCustomerDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
-const client_1 = require("@prisma/client");
+const enums_1 = require("../../../common/enums");
 class CreateCustomerDto {
     name;
     code;
@@ -44,13 +43,13 @@ __decorate([
 ], CreateCustomerDto.prototype, "code", void 0);
 __decorate([
     (0, swagger_1.ApiPropertyOptional)({
-        enum: client_1.CustomerType,
-        default: client_1.CustomerType.BOTH,
+        enum: enums_1.CustomerType,
+        default: enums_1.CustomerType.BOTH,
         description: 'Customer classification (SHIPPER, CONSIGNEE, BOTH)',
     }),
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsEnum)(client_1.CustomerType),
-    __metadata("design:type", typeof (_a = typeof client_1.CustomerType !== "undefined" && client_1.CustomerType) === "function" ? _a : Object)
+    (0, class_validator_1.IsEnum)(enums_1.CustomerType),
+    __metadata("design:type", String)
 ], CreateCustomerDto.prototype, "type", void 0);
 __decorate([
     (0, swagger_1.ApiPropertyOptional)({ example: '27AAAAA0000A1Z5', description: 'GSTIN Registration Number' }),
@@ -114,12 +113,12 @@ __decorate([
 ], CreateCustomerDto.prototype, "pincode", void 0);
 __decorate([
     (0, swagger_1.ApiPropertyOptional)({
-        enum: client_1.CustomerStatus,
-        default: client_1.CustomerStatus.ACTIVE,
+        enum: enums_1.CustomerStatus,
+        default: enums_1.CustomerStatus.ACTIVE,
         description: 'Account operational status',
     }),
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsEnum)(client_1.CustomerStatus),
-    __metadata("design:type", typeof (_b = typeof client_1.CustomerStatus !== "undefined" && client_1.CustomerStatus) === "function" ? _b : Object)
+    (0, class_validator_1.IsEnum)(enums_1.CustomerStatus),
+    __metadata("design:type", String)
 ], CreateCustomerDto.prototype, "status", void 0);
 //# sourceMappingURL=create-customer.dto.js.map

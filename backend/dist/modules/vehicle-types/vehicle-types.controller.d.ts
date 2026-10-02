@@ -6,18 +6,18 @@ import { UserPayload } from '../../common/decorators/current-user.decorator';
 export declare class VehicleTypesController {
     private readonly vehicleTypesService;
     constructor(vehicleTypesService: VehicleTypesService);
-    create(user: UserPayload, dto: CreateVehicleTypeDto): Promise<any>;
+    create(user: UserPayload, dto: CreateVehicleTypeDto): Promise<import("./models/vehicle-types.model").VehicleType>;
     findAll(user: UserPayload, query: QueryVehicleTypeDto): Promise<{
-        data: any;
+        data: import("./models/vehicle-types.model").VehicleType[];
         meta: {
-            total: any;
+            total: number;
             page: number;
             limit: number;
             totalPages: number;
         };
     }>;
-    findOne(user: UserPayload, id: string): Promise<any>;
-    update(user: UserPayload, id: string, dto: UpdateVehicleTypeDto): Promise<any>;
+    findOne(user: UserPayload, id: string): Promise<import("./models/vehicle-types.model").VehicleType>;
+    update(user: UserPayload, id: string, dto: UpdateVehicleTypeDto): Promise<import("./models/vehicle-types.model").VehicleType>;
     remove(user: UserPayload, id: string): Promise<{
         message: string;
     }>;

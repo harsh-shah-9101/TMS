@@ -1,4 +1,13 @@
-declare const UpdateTripDto_base: import("@nestjs/mapped-types").MappedType<any>;
-export declare class UpdateTripDto extends UpdateTripDto_base {
+import { CreateTripDto } from './create-trip.dto';
+export declare class UpdateTripDto implements Partial<CreateTripDto> {
+    routeId?: string;
+    vehicleId?: string;
+    driverId?: string;
+    carrierId?: string;
+    status?: any;
+    plannedStartDate?: string;
+    plannedEndDate?: string;
+    startOdometer?: number;
+    endOdometer?: number;
+    remarks?: string;
 }
-export {};

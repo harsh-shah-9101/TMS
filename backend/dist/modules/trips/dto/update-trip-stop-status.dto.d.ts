@@ -1,4 +1,4 @@
-import { StopStatus } from '@prisma/client';
+import { StopStatus } from '../../../common/enums';
 export declare class UpdateTripStopStatusDto {
     status: StopStatus;
     arrivalTime?: string;

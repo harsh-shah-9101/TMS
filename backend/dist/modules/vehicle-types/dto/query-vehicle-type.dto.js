@@ -8,13 +8,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var _a, _b;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.QueryVehicleTypeDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 const class_transformer_1 = require("class-transformer");
-const client_1 = require("@prisma/client");
+const enums_1 = require("../../../common/enums");
 class QueryVehicleTypeDto {
     search;
     status;
@@ -30,16 +29,16 @@ __decorate([
     __metadata("design:type", String)
 ], QueryVehicleTypeDto.prototype, "search", void 0);
 __decorate([
-    (0, swagger_1.ApiPropertyOptional)({ enum: client_1.VehicleTypeStatus, description: 'Filter by status' }),
+    (0, swagger_1.ApiPropertyOptional)({ enum: enums_1.VehicleTypeStatus, description: 'Filter by status' }),
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsEnum)(client_1.VehicleTypeStatus),
-    __metadata("design:type", typeof (_a = typeof client_1.VehicleTypeStatus !== "undefined" && client_1.VehicleTypeStatus) === "function" ? _a : Object)
+    (0, class_validator_1.IsEnum)(enums_1.VehicleTypeStatus),
+    __metadata("design:type", String)
 ], QueryVehicleTypeDto.prototype, "status", void 0);
 __decorate([
-    (0, swagger_1.ApiPropertyOptional)({ enum: client_1.FuelType, description: 'Filter by fuel type' }),
+    (0, swagger_1.ApiPropertyOptional)({ enum: enums_1.FuelType, description: 'Filter by fuel type' }),
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsEnum)(client_1.FuelType),
-    __metadata("design:type", typeof (_b = typeof client_1.FuelType !== "undefined" && client_1.FuelType) === "function" ? _b : Object)
+    (0, class_validator_1.IsEnum)(enums_1.FuelType),
+    __metadata("design:type", String)
 ], QueryVehicleTypeDto.prototype, "fuelType", void 0);
 __decorate([
     (0, swagger_1.ApiPropertyOptional)({ example: 1, default: 1 }),

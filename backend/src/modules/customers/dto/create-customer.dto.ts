@@ -7,7 +7,7 @@ import {
   IsString,
   Matches,
 } from 'class-validator';
-import { CustomerStatus, CustomerType } from '@prisma/client';
+import { CustomerStatus, CustomerType } from '../../../common/enums';
 
 export class CreateCustomerDto {
   @ApiProperty({ example: 'Reliance Industries Ltd', description: 'Customer / Party full legal name' })

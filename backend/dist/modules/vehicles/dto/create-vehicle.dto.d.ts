@@ -1,4 +1,4 @@
-import { OwnershipType, VehicleStatus } from '@prisma/client';
+import { OwnershipType, VehicleStatus } from '../../../common/enums';
 export declare class CreateVehicleDto {
     vehicleTypeId: string;
     registrationNumber: string;

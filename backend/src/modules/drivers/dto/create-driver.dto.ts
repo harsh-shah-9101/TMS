@@ -7,7 +7,7 @@ import {
   IsString,
   IsUUID,
 } from 'class-validator';
-import { DriverStatus } from '@prisma/client';
+import { DriverStatus } from '../../../common/enums';
 
 export class CreateDriverDto {
   @ApiProperty({ example: 'Rahul', description: 'Driver first name' })

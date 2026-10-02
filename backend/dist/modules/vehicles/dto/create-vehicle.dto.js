@@ -8,12 +8,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var _a, _b;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateVehicleDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
-const client_1 = require("@prisma/client");
+const enums_1 = require("../../../common/enums");
 class CreateVehicleDto {
     vehicleTypeId;
     registrationNumber;
@@ -73,23 +72,23 @@ __decorate([
 ], CreateVehicleDto.prototype, "year", void 0);
 __decorate([
     (0, swagger_1.ApiPropertyOptional)({
-        enum: client_1.VehicleStatus,
-        default: client_1.VehicleStatus.AVAILABLE,
+        enum: enums_1.VehicleStatus,
+        default: enums_1.VehicleStatus.AVAILABLE,
         description: 'Vehicle operational status',
     }),
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsEnum)(client_1.VehicleStatus),
-    __metadata("design:type", typeof (_a = typeof client_1.VehicleStatus !== "undefined" && client_1.VehicleStatus) === "function" ? _a : Object)
+    (0, class_validator_1.IsEnum)(enums_1.VehicleStatus),
+    __metadata("design:type", String)
 ], CreateVehicleDto.prototype, "status", void 0);
 __decorate([
     (0, swagger_1.ApiPropertyOptional)({
-        enum: client_1.OwnershipType,
-        default: client_1.OwnershipType.OWNED,
+        enum: enums_1.OwnershipType,
+        default: enums_1.OwnershipType.OWNED,
         description: 'Vehicle ownership classification',
     }),
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsEnum)(client_1.OwnershipType),
-    __metadata("design:type", typeof (_b = typeof client_1.OwnershipType !== "undefined" && client_1.OwnershipType) === "function" ? _b : Object)
+    (0, class_validator_1.IsEnum)(enums_1.OwnershipType),
+    __metadata("design:type", String)
 ], CreateVehicleDto.prototype, "ownershipType", void 0);
 __decorate([
     (0, swagger_1.ApiPropertyOptional)({ example: 12500.5, default: 0, description: 'Current odometer reading in km' }),

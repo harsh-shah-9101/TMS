@@ -4,7 +4,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { ConflictException, UnauthorizedException } from '@nestjs/common';
-import { RoleName } from '@prisma/client';
+import { RoleName } from '../../common/enums';
 import * as bcrypt from 'bcrypt';
 
 vi.mock('bcrypt', () => ({

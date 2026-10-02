@@ -9,7 +9,7 @@ import { Driver } from '../drivers/models/driver.model';
 import { Carrier } from '../carriers/models/carrier.model';
 import { Shipment } from '../shipments/models/shipment.model';
 import { ConflictException, NotFoundException, BadRequestException } from '@nestjs/common';
-import { TripStatus } from '@prisma/client';
+import { TripStatus } from '../../common/enums';
 
 describe('TripsService', () => {
   let service: TripsService;

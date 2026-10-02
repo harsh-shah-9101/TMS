@@ -24,7 +24,7 @@ const jwt_auth_guard_1 = require("../../common/guards/jwt-auth.guard");
 const roles_guard_1 = require("../../common/guards/roles.guard");
 const roles_decorator_1 = require("../../common/decorators/roles.decorator");
 const current_user_decorator_1 = require("../../common/decorators/current-user.decorator");
-const client_1 = require("@prisma/client");
+const enums_1 = require("../../common/enums");
 let ShipmentsController = class ShipmentsController {
     shipmentsService;
     constructor(shipmentsService) {
@@ -53,7 +53,7 @@ exports.ShipmentsController = ShipmentsController;
 __decorate([
     (0, common_1.Post)(),
     (0, common_1.HttpCode)(common_1.HttpStatus.CREATED),
-    (0, roles_decorator_1.Roles)(client_1.RoleName.ADMIN, client_1.RoleName.TRANSPORT_MANAGER, client_1.RoleName.DISPATCHER),
+    (0, roles_decorator_1.Roles)(enums_1.RoleName.ADMIN, enums_1.RoleName.TRANSPORT_MANAGER, enums_1.RoleName.DISPATCHER),
     (0, swagger_1.ApiOperation)({ summary: 'Create a new freight shipment / booking' }),
     (0, swagger_1.ApiResponse)({ status: 201, description: 'Shipment created successfully' }),
     (0, swagger_1.ApiResponse)({ status: 400, description: 'Bad request / invalid customer' }),
@@ -67,7 +67,7 @@ __decorate([
 __decorate([
     (0, common_1.Get)(),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
-    (0, roles_decorator_1.Roles)(client_1.RoleName.ADMIN, client_1.RoleName.TRANSPORT_MANAGER, client_1.RoleName.DISPATCHER, client_1.RoleName.FLEET_MANAGER, client_1.RoleName.ACCOUNTS, client_1.RoleName.VIEWER),
+    (0, roles_decorator_1.Roles)(enums_1.RoleName.ADMIN, enums_1.RoleName.TRANSPORT_MANAGER, enums_1.RoleName.DISPATCHER, enums_1.RoleName.FLEET_MANAGER, enums_1.RoleName.ACCOUNTS, enums_1.RoleName.VIEWER),
     (0, swagger_1.ApiOperation)({ summary: 'List shipments with search, status filter, and pagination' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Paginated list of shipments' }),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
@@ -79,7 +79,7 @@ __decorate([
 __decorate([
     (0, common_1.Get)(':id'),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
-    (0, roles_decorator_1.Roles)(client_1.RoleName.ADMIN, client_1.RoleName.TRANSPORT_MANAGER, client_1.RoleName.DISPATCHER, client_1.RoleName.FLEET_MANAGER, client_1.RoleName.ACCOUNTS, client_1.RoleName.VIEWER),
+    (0, roles_decorator_1.Roles)(enums_1.RoleName.ADMIN, enums_1.RoleName.TRANSPORT_MANAGER, enums_1.RoleName.DISPATCHER, enums_1.RoleName.FLEET_MANAGER, enums_1.RoleName.ACCOUNTS, enums_1.RoleName.VIEWER),
     (0, swagger_1.ApiOperation)({ summary: 'Get shipment details by ID' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Shipment details' }),
     (0, swagger_1.ApiResponse)({ status: 404, description: 'Shipment not found' }),
@@ -92,7 +92,7 @@ __decorate([
 __decorate([
     (0, common_1.Patch)(':id/status'),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
-    (0, roles_decorator_1.Roles)(client_1.RoleName.ADMIN, client_1.RoleName.TRANSPORT_MANAGER, client_1.RoleName.DISPATCHER),
+    (0, roles_decorator_1.Roles)(enums_1.RoleName.ADMIN, enums_1.RoleName.TRANSPORT_MANAGER, enums_1.RoleName.DISPATCHER),
     (0, swagger_1.ApiOperation)({ summary: 'Update shipment status transition (Strict workflow rules)' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Shipment status updated successfully' }),
     (0, swagger_1.ApiResponse)({ status: 400, description: 'Invalid status transition' }),
@@ -107,7 +107,7 @@ __decorate([
 __decorate([
     (0, common_1.Patch)(':id'),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
-    (0, roles_decorator_1.Roles)(client_1.RoleName.ADMIN, client_1.RoleName.TRANSPORT_MANAGER, client_1.RoleName.DISPATCHER),
+    (0, roles_decorator_1.Roles)(enums_1.RoleName.ADMIN, enums_1.RoleName.TRANSPORT_MANAGER, enums_1.RoleName.DISPATCHER),
     (0, swagger_1.ApiOperation)({ summary: 'Update shipment booking details' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Shipment updated successfully' }),
     (0, swagger_1.ApiResponse)({ status: 404, description: 'Shipment not found' }),
@@ -121,7 +121,7 @@ __decorate([
 __decorate([
     (0, common_1.Delete)(':id'),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
-    (0, roles_decorator_1.Roles)(client_1.RoleName.ADMIN, client_1.RoleName.TRANSPORT_MANAGER),
+    (0, roles_decorator_1.Roles)(enums_1.RoleName.ADMIN, enums_1.RoleName.TRANSPORT_MANAGER),
     (0, swagger_1.ApiOperation)({ summary: 'Soft delete shipment' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: 'Shipment deleted successfully' }),
     (0, swagger_1.ApiResponse)({ status: 404, description: 'Shipment not found' }),

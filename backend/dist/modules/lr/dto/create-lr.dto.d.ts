@@ -1,4 +1,4 @@
-import { FreightTerm, LRStatus } from '@prisma/client';
+import { FreightTerm, LRStatus } from '../../../common/enums';
 export declare class CreateLrDto {
     shipmentId: string;
     lrNumber: string;

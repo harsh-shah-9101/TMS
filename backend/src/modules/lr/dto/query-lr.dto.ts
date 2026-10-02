@@ -1,7 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsInt, IsOptional, IsString, IsUUID, Min } from 'class-validator';
 import { Type } from 'class-transformer';
-import { FreightTerm, LRStatus } from '@prisma/client';
+import { FreightTerm, LRStatus } from '../../../common/enums';
 
 export class QueryLrDto {
   @ApiPropertyOptional({ description: 'Search term for LR number, consignor, or consignee' })

@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Vehicle = void 0;
 const sequelize_typescript_1 = require("sequelize-typescript");
+const vehicle_types_model_1 = require("../../vehicle-types/models/vehicle-types.model");
 let Vehicle = class Vehicle extends sequelize_typescript_1.Model {
 };
 exports.Vehicle = Vehicle;
@@ -31,6 +32,19 @@ __decorate([
     __metadata("design:type", String)
 ], Vehicle.prototype, "organizationId", void 0);
 __decorate([
+    (0, sequelize_typescript_1.ForeignKey)(() => vehicle_types_model_1.VehicleType),
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.UUID,
+        allowNull: false,
+        field: 'vehicle_type_id',
+    }),
+    __metadata("design:type", String)
+], Vehicle.prototype, "vehicleTypeId", void 0);
+__decorate([
+    (0, sequelize_typescript_1.BelongsTo)(() => vehicle_types_model_1.VehicleType),
+    __metadata("design:type", vehicle_types_model_1.VehicleType)
+], Vehicle.prototype, "vehicleType", void 0);
+__decorate([
     (0, sequelize_typescript_1.Column)({
         type: sequelize_typescript_1.DataType.STRING(50),
         allowNull: false,
@@ -40,7 +54,60 @@ __decorate([
 ], Vehicle.prototype, "registrationNumber", void 0);
 __decorate([
     (0, sequelize_typescript_1.Column)({
-        type: sequelize_typescript_1.DataType.ENUM('AVAILABLE', 'ASSIGNED', 'IN_TRANSIT', 'MAINTENANCE', 'OUT_OF_SERVICE'),
+        type: sequelize_typescript_1.DataType.STRING(100),
+        allowNull: true,
+        field: 'chassis_number',
+    }),
+    __metadata("design:type", String)
+], Vehicle.prototype, "chassisNumber", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.STRING(100),
+        allowNull: true,
+        field: 'engine_number',
+    }),
+    __metadata("design:type", String)
+], Vehicle.prototype, "engineNumber", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.STRING(50),
+        allowNull: true,
+    }),
+    __metadata("design:type", String)
+], Vehicle.prototype, "make", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.STRING(50),
+        allowNull: true,
+    }),
+    __metadata("design:type", String)
+], Vehicle.prototype, "model", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.INTEGER,
+        allowNull: true,
+    }),
+    __metadata("design:type", Number)
+], Vehicle.prototype, "year", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.STRING(50),
+        allowNull: true,
+        field: 'ownership_type',
+    }),
+    __metadata("design:type", String)
+], Vehicle.prototype, "ownershipType", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.FLOAT,
+        defaultValue: 0,
+        field: 'current_odometer',
+    }),
+    __metadata("design:type", Number)
+], Vehicle.prototype, "currentOdometer", void 0);
+__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.STRING(50),
         defaultValue: 'AVAILABLE',
     }),
     __metadata("design:type", String)

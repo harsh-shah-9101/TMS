@@ -1,4 +1,4 @@
-import { TripStatus } from '@prisma/client';
+import { TripStatus } from '../../../common/enums';
 export declare class QueryTripDto {
     search?: string;
     status?: TripStatus;

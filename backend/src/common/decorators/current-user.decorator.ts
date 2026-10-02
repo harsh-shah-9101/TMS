@@ -1,5 +1,5 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { RoleName } from '@prisma/client';
+import { RoleName } from '../enums';
 
 export interface UserPayload {
   userId: string;

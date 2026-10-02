@@ -8,12 +8,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateRouteDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
-const client_1 = require("@prisma/client");
+const enums_1 = require("../../../common/enums");
 class CreateRouteDto {
     name;
     code;
@@ -78,12 +77,12 @@ __decorate([
 ], CreateRouteDto.prototype, "estimatedHours", void 0);
 __decorate([
     (0, swagger_1.ApiPropertyOptional)({
-        enum: client_1.RouteStatus,
-        default: client_1.RouteStatus.ACTIVE,
+        enum: enums_1.RouteStatus,
+        default: enums_1.RouteStatus.ACTIVE,
         description: 'Route operational status',
     }),
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsEnum)(client_1.RouteStatus),
-    __metadata("design:type", typeof (_a = typeof client_1.RouteStatus !== "undefined" && client_1.RouteStatus) === "function" ? _a : Object)
+    (0, class_validator_1.IsEnum)(enums_1.RouteStatus),
+    __metadata("design:type", String)
 ], CreateRouteDto.prototype, "status", void 0);
 //# sourceMappingURL=create-route.dto.js.map

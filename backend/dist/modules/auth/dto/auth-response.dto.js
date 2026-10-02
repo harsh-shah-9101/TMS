@@ -8,11 +8,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthResponseDto = exports.UserResponseDto = void 0;
 const swagger_1 = require("@nestjs/swagger");
-const client_1 = require("@prisma/client");
+const enums_1 = require("../../../common/enums");
 class UserResponseDto {
     id;
     email;
@@ -49,7 +48,7 @@ __decorate([
 ], UserResponseDto.prototype, "organizationId", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
-    __metadata("design:type", typeof (_a = typeof client_1.RoleName !== "undefined" && client_1.RoleName) === "function" ? _a : Object)
+    __metadata("design:type", String)
 ], UserResponseDto.prototype, "role", void 0);
 class AuthResponseDto {
     accessToken;

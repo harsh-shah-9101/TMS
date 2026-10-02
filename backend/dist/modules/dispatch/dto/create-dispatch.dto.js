@@ -8,11 +8,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateDispatchDto = void 0;
 const class_validator_1 = require("class-validator");
-const client_1 = require("@prisma/client");
+const enums_1 = require("../../../common/enums");
 class CreateDispatchDto {
     tripId;
     dispatchNumber;
@@ -38,8 +37,8 @@ __decorate([
 ], CreateDispatchDto.prototype, "gatePassNumber", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsEnum)(client_1.DispatchStatus),
-    __metadata("design:type", typeof (_a = typeof client_1.DispatchStatus !== "undefined" && client_1.DispatchStatus) === "function" ? _a : Object)
+    (0, class_validator_1.IsEnum)(enums_1.DispatchStatus),
+    __metadata("design:type", String)
 ], CreateDispatchDto.prototype, "status", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),

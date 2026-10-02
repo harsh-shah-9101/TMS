@@ -8,11 +8,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var _a, _b;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CreateTripStopDto = void 0;
 const class_validator_1 = require("class-validator");
-const client_1 = require("@prisma/client");
+const enums_1 = require("../../../common/enums");
 class CreateTripStopDto {
     sequence;
     shipmentId;
@@ -37,8 +36,8 @@ __decorate([
 ], CreateTripStopDto.prototype, "shipmentId", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsEnum)(client_1.StopType),
-    __metadata("design:type", typeof (_a = typeof client_1.StopType !== "undefined" && client_1.StopType) === "function" ? _a : Object)
+    (0, class_validator_1.IsEnum)(enums_1.StopType),
+    __metadata("design:type", String)
 ], CreateTripStopDto.prototype, "stopType", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
@@ -57,8 +56,8 @@ __decorate([
 ], CreateTripStopDto.prototype, "pincode", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsEnum)(client_1.StopStatus),
-    __metadata("design:type", typeof (_b = typeof client_1.StopStatus !== "undefined" && client_1.StopStatus) === "function" ? _b : Object)
+    (0, class_validator_1.IsEnum)(enums_1.StopStatus),
+    __metadata("design:type", String)
 ], CreateTripStopDto.prototype, "status", void 0);
 __decorate([
     (0, class_validator_1.IsOptional)(),

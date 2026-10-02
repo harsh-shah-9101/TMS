@@ -24,7 +24,6 @@ var RoleName;
     RoleName["VIEWER"] = "VIEWER";
 })(RoleName || (exports.RoleName = RoleName = {}));
 let Role = class Role extends sequelize_typescript_1.Model {
-    id;
     name;
     description;
     users;

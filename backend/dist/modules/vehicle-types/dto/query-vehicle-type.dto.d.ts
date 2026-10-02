@@ -1,4 +1,4 @@
-import { VehicleTypeStatus, FuelType } from '@prisma/client';
+import { VehicleTypeStatus, FuelType } from '../../../common/enums';
 export declare class QueryVehicleTypeDto {
     search?: string;
     status?: VehicleTypeStatus;

@@ -1,4 +1,4 @@
-import { CustomerStatus, CustomerType } from '@prisma/client';
+import { CustomerStatus, CustomerType } from '../../../common/enums';
 export declare class CreateCustomerDto {
     name: string;
     code: string;

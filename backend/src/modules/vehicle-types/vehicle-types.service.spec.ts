@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { VehicleTypesService } from './vehicle-types.service';
 import { PrismaService } from '../../prisma/prisma.service';
 import { ConflictException, NotFoundException } from '@nestjs/common';
-import { FuelType, VehicleTypeStatus } from '@prisma/client';
+import { FuelType, VehicleTypeStatus } from '../../common/enums';
 
 describe('VehicleTypesService', () => {
   let service: VehicleTypesService;

@@ -1,7 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsInt, IsOptional, IsString, Min } from 'class-validator';
 import { Type } from 'class-transformer';
-import { CarrierStatus } from '@prisma/client';
+import { CarrierStatus } from '../../../common/enums';
 
 export class QueryCarrierDto {
   @ApiPropertyOptional({ description: 'Search term for name, code, GSTIN, city, or phone' })

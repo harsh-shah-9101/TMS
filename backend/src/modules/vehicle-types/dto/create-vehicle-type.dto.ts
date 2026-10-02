@@ -8,7 +8,7 @@ import {
   IsString,
   Min,
 } from 'class-validator';
-import { FuelType, VehicleTypeStatus } from '@prisma/client';
+import { FuelType, VehicleTypeStatus } from '../../../common/enums';
 
 export class CreateVehicleTypeDto {
   @ApiProperty({ example: '32ft Multi-Axle Container', description: 'Name of the vehicle type' })

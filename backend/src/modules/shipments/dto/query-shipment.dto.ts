@@ -1,7 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsInt, IsOptional, IsString, IsUUID, Min } from 'class-validator';
 import { Type } from 'class-transformer';
-import { ShipmentStatus } from '@prisma/client';
+import { ShipmentStatus } from '../../../common/enums';
 
 export class QueryShipmentDto {
   @ApiPropertyOptional({ description: 'Search term for booking number, origin, or destination' })

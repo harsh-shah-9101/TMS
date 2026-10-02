@@ -1,4 +1,4 @@
-import { ShipmentStatus } from '@prisma/client';
+import { ShipmentStatus } from '../../../common/enums';
 import { CreateShipmentItemDto } from './create-shipment-item.dto';
 export declare class CreateShipmentDto {
     bookingNumber: string;
