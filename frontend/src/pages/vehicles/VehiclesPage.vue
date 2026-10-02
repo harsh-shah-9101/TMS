@@ -2,6 +2,9 @@
 import { ref, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import api from '@/config/api'
+import TmsField from '@/components/form/TmsField.vue'
+import TmsCombo from '@/components/form/TmsCombo.vue'
+import { useTmsFormFocus } from '@/composables/useTmsFormFocus'
 
 const $q = useQuasar()
 
@@ -21,6 +24,13 @@ const filterStatus = ref('ALL')
 const vehicleTypes = ref<{ label: string; value: string }[]>([])
 
 const pagination = ref({ page: 1, rowsPerPage: 10, rowsNumber: 0 })
+
+// ─── Keyboard-first form focus ────────────────────────────────────────────────
+const formContainerRef = ref<HTMLElement | null>(null)
+const { focusNext, focusPrev, focusInitial } = useTmsFormFocus(
+  formContainerRef,
+  () => onSubmit(),
+)
 
 // ─── KPIs ─────────────────────────────────────────────────────────────────────
 const kpis = ref([
@@ -131,6 +141,7 @@ const openCreateDialog = () => {
   editingId.value = null
   form.value = emptyForm()
   showDialog.value = true
+  focusInitial()
 }
 
 // ─── Edit ────────────────────────────────────────────────────────────────────
@@ -159,6 +170,7 @@ const openEditDialog = (row: any) => {
     roadTaxExpiry: row.roadTaxExpiry ? row.roadTaxExpiry.split('T')[0] : '',
   }
   showDialog.value = true
+  focusInitial()
 }
 
 // ─── Submit (create or update) ───────────────────────────────────────────────
@@ -305,69 +317,128 @@ onMounted(() => { fetchData(); fetchVehicleTypes() })
         </q-card-section>
 
         <q-card-section class="col scroll q-pa-lg">
+          <div ref="formContainerRef">
           <q-form id="vehicleForm" @submit.prevent="onSubmit">
 
             <div class="form-section-label">Identity</div>
 
-            <q-input v-model="form.registrationNumber" label="Registration No *" outlined dense class="q-mb-md"
-              placeholder="GJ-01-XX-0000" :rules="[v => !!v || 'Required']" lazy-rules
-              :disable="isEditMode"
-              :hint="isEditMode ? 'Registration number cannot be changed' : ''"
-            />
+            <TmsField field-id="v-reg" label="Registration No" v-model="form.registrationNumber"
+              :required="true" :initial="true" :readonly="isEditMode"
+              placeholder="GJ-01-XX-0000"
+              :hint="isEditMode ? 'Cannot be changed' : ''"
+              :focus-next="focusNext" :focus-prev="focusPrev" class="q-mb-md" />
 
-            <q-select v-model="form.vehicleTypeId" :options="vehicleTypes" option-value="value" option-label="label"
-              emit-value map-options label="Vehicle Type *" outlined dense class="q-mb-md"
-              :rules="[v => !!v || 'Required']" lazy-rules />
+            <TmsCombo field-id="v-type" label="Vehicle Type" v-model="form.vehicleTypeId"
+              :options="vehicleTypes" :required="true"
+              :focus-next="focusNext" :focus-prev="focusPrev" class="q-mb-md" />
 
             <div class="row q-col-gutter-sm q-mb-md">
-              <div class="col-6"><q-input v-model="form.make" label="Make *" outlined dense placeholder="Tata" :rules="[v => !!v || 'Required']" lazy-rules /></div>
-              <div class="col-6"><q-input v-model="form.model" label="Model *" outlined dense placeholder="Prima 4928.S" :rules="[v => !!v || 'Required']" lazy-rules /></div>
+              <div class="col-6">
+                <TmsField field-id="v-make" label="Make" v-model="form.make"
+                  :required="true" placeholder="Tata"
+                  :focus-next="focusNext" :focus-prev="focusPrev" />
+              </div>
+              <div class="col-6">
+                <TmsField field-id="v-model" label="Model" v-model="form.model"
+                  :required="true" placeholder="Prima 4928.S"
+                  :focus-next="focusNext" :focus-prev="focusPrev" />
+              </div>
             </div>
 
             <div class="row q-col-gutter-sm q-mb-md">
               <div class="col-6">
-                <q-select v-model="form.ownershipType" :options="ownershipOptions" option-value="value" option-label="label"
-                  emit-value map-options label="Ownership *" outlined dense :rules="[v => !!v || 'Required']" lazy-rules />
+                <TmsCombo field-id="v-ownership" label="Ownership" v-model="form.ownershipType"
+                  :options="ownershipOptions" :required="true"
+                  :focus-next="focusNext" :focus-prev="focusPrev" />
               </div>
-              <div class="col-6"><q-input v-model.number="form.year" type="number" label="Year of Mfg" outlined dense placeholder="2022" /></div>
+              <div class="col-6">
+                <TmsField field-id="v-year" label="Year of Mfg" v-model="form.year"
+                  type="number" placeholder="2022"
+                  :focus-next="focusNext" :focus-prev="focusPrev" />
+              </div>
             </div>
 
             <div class="row q-col-gutter-sm q-mb-md">
-              <div class="col-6"><q-input v-model.number="form.capacityWeight" type="number" label="Capacity (MT) *" outlined dense :rules="[v => !!v || 'Required']" lazy-rules /></div>
-              <div class="col-6"><q-input v-model.number="form.targetKmPerL" type="number" step="0.1" label="Target km/L" outlined dense /></div>
+              <div class="col-6">
+                <TmsField field-id="v-cap" label="Capacity (MT)" v-model="form.capacityWeight"
+                  type="number" :required="true"
+                  :focus-next="focusNext" :focus-prev="focusPrev" />
+              </div>
+              <div class="col-6">
+                <TmsField field-id="v-kml" label="Target km/L" v-model="form.targetKmPerL"
+                  type="number"
+                  :focus-next="focusNext" :focus-prev="focusPrev" />
+              </div>
             </div>
 
             <div class="row q-col-gutter-sm q-mb-md">
-              <div class="col-6"><q-input v-model="form.chassisNumber" label="Chassis No" outlined dense /></div>
-              <div class="col-6"><q-input v-model="form.engineNumber" label="Engine No" outlined dense /></div>
+              <div class="col-6">
+                <TmsField field-id="v-chassis" label="Chassis No" v-model="form.chassisNumber"
+                  :focus-next="focusNext" :focus-prev="focusPrev" />
+              </div>
+              <div class="col-6">
+                <TmsField field-id="v-engine" label="Engine No" v-model="form.engineNumber"
+                  :focus-next="focusNext" :focus-prev="focusPrev" />
+              </div>
             </div>
 
             <div class="row q-col-gutter-sm q-mb-md">
-              <div class="col-6"><q-input v-model="form.gpsDeviceId" label="GPS Device ID" outlined dense /></div>
-              <div class="col-6"><q-input v-model="form.fastagId" label="FASTag ID" outlined dense /></div>
+              <div class="col-6">
+                <TmsField field-id="v-gps" label="GPS Device ID" v-model="form.gpsDeviceId"
+                  :focus-next="focusNext" :focus-prev="focusPrev" />
+              </div>
+              <div class="col-6">
+                <TmsField field-id="v-fastag" label="FASTag ID" v-model="form.fastagId"
+                  :focus-next="focusNext" :focus-prev="focusPrev" />
+              </div>
             </div>
 
-            <q-select v-model="form.status" :options="statusOptions" option-value="value" option-label="label"
-              emit-value map-options label="Status *" outlined dense class="q-mb-lg"
-              :rules="[v => !!v || 'Required']" lazy-rules />
+            <TmsCombo field-id="v-status" label="Status" v-model="form.status"
+              :options="statusOptions" :required="true"
+              :focus-next="focusNext" :focus-prev="focusPrev" class="q-mb-lg" />
 
             <q-separator class="q-mb-md" />
             <div class="form-section-label">Documents — Expiry Dates</div>
 
             <div class="row q-col-gutter-sm q-mb-md">
-              <div class="col-6"><q-input v-model="form.rcExpiry" type="date" label="RC Expiry *" outlined dense stack-label :rules="[v => !!v || 'Required']" lazy-rules /></div>
-              <div class="col-6"><q-input v-model="form.fitnessExpiry" type="date" label="Fitness Expiry *" outlined dense stack-label :rules="[v => !!v || 'Required']" lazy-rules /></div>
+              <div class="col-6">
+                <TmsField field-id="v-rc" label="RC Expiry" v-model="form.rcExpiry"
+                  type="date" :required="true"
+                  :focus-next="focusNext" :focus-prev="focusPrev" />
+              </div>
+              <div class="col-6">
+                <TmsField field-id="v-fit" label="Fitness Expiry" v-model="form.fitnessExpiry"
+                  type="date" :required="true"
+                  :focus-next="focusNext" :focus-prev="focusPrev" />
+              </div>
             </div>
             <div class="row q-col-gutter-sm q-mb-md">
-              <div class="col-6"><q-input v-model="form.insuranceExpiry" type="date" label="Insurance Expiry *" outlined dense stack-label :rules="[v => !!v || 'Required']" lazy-rules /></div>
-              <div class="col-6"><q-input v-model="form.pucExpiry" type="date" label="PUC Expiry *" outlined dense stack-label :rules="[v => !!v || 'Required']" lazy-rules /></div>
+              <div class="col-6">
+                <TmsField field-id="v-ins" label="Insurance Expiry" v-model="form.insuranceExpiry"
+                  type="date" :required="true"
+                  :focus-next="focusNext" :focus-prev="focusPrev" />
+              </div>
+              <div class="col-6">
+                <TmsField field-id="v-puc" label="PUC Expiry" v-model="form.pucExpiry"
+                  type="date" :required="true"
+                  :focus-next="focusNext" :focus-prev="focusPrev" />
+              </div>
             </div>
             <div class="row q-col-gutter-sm q-mb-md">
-              <div class="col-6"><q-input v-model="form.permitExpiry" type="date" label="Permit Expiry" outlined dense stack-label /></div>
-              <div class="col-6"><q-input v-model="form.roadTaxExpiry" type="date" label="Road Tax Expiry" outlined dense stack-label /></div>
+              <div class="col-6">
+                <TmsField field-id="v-permit" label="Permit Expiry" v-model="form.permitExpiry"
+                  type="date"
+                  :focus-next="focusNext" :focus-prev="focusPrev" />
+              </div>
+              <div class="col-6">
+                <TmsField field-id="v-roadtax" label="Road Tax Expiry" v-model="form.roadTaxExpiry"
+                  type="date"
+                  :focus-next="focusNext" :focus-prev="focusPrev" />
+              </div>
             </div>
 
           </q-form>
+          </div>
         </q-card-section>
 
         <q-card-section class="row justify-end items-center q-py-sm q-px-lg" style="border-top:1px solid #f0f0f0;background:#fafafa;">
