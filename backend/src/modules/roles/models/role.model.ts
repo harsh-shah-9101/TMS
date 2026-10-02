@@ -30,14 +30,14 @@ export class Role extends Model<Role> {
     allowNull: false,
     unique: true,
   })
-  name: RoleName;
+  declare name: RoleName;
 
   @Column({
     type: DataType.STRING(255),
     allowNull: true,
   })
-  description: string;
+  declare description?: string;
 
   @HasMany(() => User)
-  users: User[];
+  declare users?: User[];
 }

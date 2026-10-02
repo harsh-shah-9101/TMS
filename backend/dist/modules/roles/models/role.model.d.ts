@@ -13,6 +13,6 @@ export declare enum RoleName {
 export declare class Role extends Model<Role> {
     id: string;
     name: RoleName;
-    description: string;
-    users: User[];
+    description?: string;
+    users?: User[];
 }

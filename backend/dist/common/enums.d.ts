@@ -97,14 +97,24 @@ export declare enum CustomerStatus {
 export declare enum CustomerType {
     REGULAR = "REGULAR",
     CORPORATE = "CORPORATE",
-    INDIVIDUAL = "INDIVIDUAL"
+    INDIVIDUAL = "INDIVIDUAL",
+    BOTH = "BOTH"
 }
 export declare enum DispatchStatus {
     DRAFT = "DRAFT",
     ASSIGNED = "ASSIGNED",
     DISPATCHED = "DISPATCHED",
     COMPLETED = "COMPLETED",
-    CANCELLED = "CANCELLED"
+    CANCELLED = "CANCELLED",
+    GATE_OUT = "GATE_OUT"
+}
+export declare enum LRStatus {
+    DRAFT = "DRAFT",
+    GENERATED = "GENERATED",
+    IN_TRANSIT = "IN_TRANSIT",
+    DELIVERED = "DELIVERED",
+    CANCELLED = "CANCELLED",
+    ISSUED = "ISSUED"
 }
 export declare enum CarrierStatus {
     ACTIVE = "ACTIVE",

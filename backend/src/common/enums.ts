@@ -112,6 +112,7 @@ export enum CustomerType {
   REGULAR = 'REGULAR',
   CORPORATE = 'CORPORATE',
   INDIVIDUAL = 'INDIVIDUAL',
+  BOTH = 'BOTH',
 }
 
 export enum DispatchStatus {
@@ -120,6 +121,16 @@ export enum DispatchStatus {
   DISPATCHED = 'DISPATCHED',
   COMPLETED = 'COMPLETED',
   CANCELLED = 'CANCELLED',
+  GATE_OUT = 'GATE_OUT',
+}
+
+export enum LRStatus {
+  DRAFT = 'DRAFT',
+  GENERATED = 'GENERATED',
+  IN_TRANSIT = 'IN_TRANSIT',
+  DELIVERED = 'DELIVERED',
+  CANCELLED = 'CANCELLED',
+  ISSUED = 'ISSUED',
 }
 
 export enum CarrierStatus {

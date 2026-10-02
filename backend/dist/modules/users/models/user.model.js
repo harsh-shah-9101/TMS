@@ -20,18 +20,6 @@ var UserStatus;
     UserStatus["SUSPENDED"] = "SUSPENDED";
 })(UserStatus || (exports.UserStatus = UserStatus = {}));
 let User = class User extends sequelize_typescript_1.Model {
-    organizationId;
-    organization;
-    roleId;
-    role;
-    email;
-    password;
-    firstName;
-    lastName;
-    phone;
-    status;
-    refreshToken;
-    lastLoginAt;
 };
 exports.User = User;
 __decorate([

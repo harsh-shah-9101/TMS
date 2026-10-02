@@ -27,67 +27,67 @@ export class User extends Model<User> {
     type: DataType.UUID,
     allowNull: false,
   })
-  organizationId: string;
+  declare organizationId: string;
 
   @BelongsTo(() => Organization)
-  organization: Organization;
+  declare organization?: Organization;
 
   @ForeignKey(() => Role)
   @Column({
     type: DataType.UUID,
     allowNull: false,
   })
-  roleId: string;
+  declare roleId: string;
 
   @BelongsTo(() => Role)
-  role: Role;
+  declare role?: Role;
 
   @Column({
     type: DataType.STRING(255),
     allowNull: false,
     unique: true,
   })
-  email: string;
+  declare email: string;
 
   @Column({
     type: DataType.STRING(255),
     allowNull: false,
   })
-  password: string;
+  declare password: string;
 
   @Column({
     type: DataType.STRING(100),
     allowNull: false,
   })
-  firstName: string;
+  declare firstName: string;
 
   @Column({
     type: DataType.STRING(100),
     allowNull: false,
   })
-  lastName: string;
+  declare lastName: string;
 
   @Column({
     type: DataType.STRING(20),
     allowNull: true,
   })
-  phone: string;
+  declare phone?: string;
 
   @Column({
     type: DataType.ENUM(...Object.values(UserStatus)),
     defaultValue: UserStatus.ACTIVE,
   })
-  status: UserStatus;
+  declare status?: UserStatus;
 
   @Column({
     type: DataType.TEXT,
     allowNull: true,
   })
-  refreshToken: string;
+  declare refreshToken?: string;
 
   @Column({
     type: DataType.DATE,
     allowNull: true,
   })
-  lastLoginAt: Date;
+  declare lastLoginAt?: Date;
 }

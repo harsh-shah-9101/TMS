@@ -9,15 +9,15 @@ export declare enum UserStatus {
 export declare class User extends Model<User> {
     id: string;
     organizationId: string;
-    organization: Organization;
+    organization?: Organization;
     roleId: string;
-    role: Role;
+    role?: Role;
     email: string;
     password: string;
     firstName: string;
     lastName: string;
-    phone: string;
-    status: UserStatus;
-    refreshToken: string;
-    lastLoginAt: Date;
+    phone?: string;
+    status?: UserStatus;
+    refreshToken?: string;
+    lastLoginAt?: Date;
 }
