@@ -1,18 +1,17 @@
 /**
  * useTmsFormFocus
- * ---------------
- * Keyboard-first form navigation inspired by the Desk framework.
- * - Enter / Tab  → move to next field
- * - Shift+Tab    → move to previous field
- * - Auto-focuses the [data-tms-initial] field when the form container mounts.
+ * ───────────────
+ * Keyboard-first form navigation.
+ * Scans [data-tms-field] elements inside a container and lets
+ * Enter / Tab / Shift+Tab move focus between them.
  *
  * Usage:
- *   Mark every field element with:   data-tms-field="myFieldId"
- *   Mark the first field with:       data-tms-initial
- *   Call focusInitial() when the drawer/dialog opens.
+ *   1. Wrap the form in: <div ref="formContainerRef">
+ *   2. Call focusInitial() when the drawer/dialog opens.
+ *   3. Pass focusNext / focusPrev as props into every TmsField / TmsCombo.
  */
 
-import { type Ref } from 'vue'
+import { type Ref, nextTick } from 'vue'
 
 export interface TmsFormFocus {
   focusNext: (currentId: string) => void
@@ -20,57 +19,57 @@ export interface TmsFormFocus {
   focusInitial: () => void
 }
 
-/** All visible [data-tms-field] elements inside the container, in DOM order */
-function getFields(container: HTMLElement | null): HTMLElement[] {
-  if (!container) return []
-  const all = Array.from(
-    container.querySelectorAll<HTMLElement>('[data-tms-field]'),
-  )
-  return all.filter((el) => {
-    // skip hidden / disabled / readonly
-    if ((el as HTMLInputElement).disabled) return false
-    if ((el as HTMLInputElement).readOnly) return false
-    if (el.getClientRects().length === 0) return false
-    return true
+function getFields(container: HTMLElement): HTMLInputElement[] {
+  return Array.from(
+    container.querySelectorAll<HTMLInputElement>('[data-tms-field]')
+  ).filter(el => {
+    if (el.disabled) return false
+    if (el.readOnly) return false
+    // must be visible
+    const rect = el.getBoundingClientRect()
+    return rect.width > 0 || rect.height > 0
   })
 }
 
-function focusEl(el: HTMLElement): void {
+function focusEl(el: HTMLInputElement): void {
   el.focus()
-  if (el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) {
-    el.select()
-  }
+  // select all text so typing replaces it
+  try { el.select() } catch { /* textarea / date inputs may skip this */ }
 }
 
 export function useTmsFormFocus(containerRef: Ref<HTMLElement | null>): TmsFormFocus {
   function focusNext(currentId: string): void {
-    const fields = getFields(containerRef.value)
-    const idx = fields.findIndex((el) => el.dataset.tmsField === currentId)
-    if (idx === -1) return
-    const next = fields[idx + 1]
-    if (next) focusEl(next)
+    const container = containerRef.value
+    if (!container) return
+    const fields = getFields(container)
+    const idx = fields.findIndex(el => el.dataset.tmsField === currentId)
+    if (idx === -1 || idx === fields.length - 1) return
+    focusEl(fields[idx + 1]!)
   }
 
   function focusPrev(currentId: string): void {
-    const fields = getFields(containerRef.value)
-    const idx = fields.findIndex((el) => el.dataset.tmsField === currentId)
+    const container = containerRef.value
+    if (!container) return
+    const fields = getFields(container)
+    const idx = fields.findIndex(el => el.dataset.tmsField === currentId)
     if (idx <= 0) return
-    const prev = fields[idx - 1]
-    if (prev) focusEl(prev)
+    focusEl(fields[idx - 1]!)
   }
 
   function focusInitial(): void {
-    // Small delay so the DOM is rendered (drawer transition)
-    setTimeout(() => {
-      const container = containerRef.value
-      if (!container) return
-      // prefer [data-tms-initial] field
-      const marked = container.querySelector<HTMLElement>('[data-tms-initial]')
-      if (marked) { focusEl(marked); return }
-      // fallback: first visible field
-      const first = getFields(container)[0]
-      if (first) focusEl(first)
-    }, 120)
+    // Wait for Vue to render the dialog content + CSS transitions to settle
+    nextTick(() => {
+      setTimeout(() => {
+        const container = containerRef.value
+        if (!container) return
+        // Try the [data-tms-initial] field first
+        const marked = container.querySelector<HTMLInputElement>('[data-tms-initial]')
+        if (marked) { focusEl(marked); return }
+        // Fallback: first visible field
+        const first = getFields(container)[0]
+        if (first) focusEl(first)
+      }, 250)
+    })
   }
 
   return { focusNext, focusPrev, focusInitial }

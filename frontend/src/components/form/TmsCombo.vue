@@ -1,36 +1,12 @@
 <!--
-  TmsCombo.vue
-  ─────────────
-  Keyboard-first select/combo — replaces q-select in forms.
-  Inspired by DeskCombo from the Desk framework.
-
-  Behaviour:
-  - Focus → opens dropdown showing all options
-  - Type letters → filters options in real time
-  - ArrowDown / ArrowUp → highlights an option
-  - Enter (1st press) → picks highlighted option, closes dropdown
-  - Enter (2nd press) → moves to next field (like Tally)
-  - Tab → picks + moves next
-  - Shift+Tab → picks + moves prev
-  - Escape → closes without picking
-
-  Props:
-    fieldId       unique id
-    label         visible label
-    options       { label: string; value: string }[]
-    required      shows * and validates
-    initial       marks as auto-focus target
-    focusNext     from useTmsFormFocus
-    focusPrev     from useTmsFormFocus
+  TmsCombo.vue — keyboard-first select field
+  Styled IDENTICALLY to TmsField / q-input outlined dense.
+  Enter(1st) picks, Enter(2nd) advances. Tab picks+advances.
 -->
-
 <script setup lang="ts">
 import { ref, computed, watch, nextTick } from 'vue'
 
-export interface TmsOption {
-  label: string
-  value: string
-}
+export interface TmsOption { label: string; value: string }
 
 const props = withDefaults(defineProps<{
   fieldId: string
@@ -44,60 +20,62 @@ const props = withDefaults(defineProps<{
 
 const model = defineModel<string | null>({ required: true })
 
-// ── Internal state ─────────────────────────────────────────────────────────────
+// ── State ──────────────────────────────────────────────────────────────────────
 const inputRef = ref<HTMLInputElement | null>(null)
 const query = ref('')
 const open = ref(false)
 const activeIdx = ref(0)
-const accepted = ref(false) // true after first Enter picks; second Enter advances
+const accepted = ref(false)
+const focused = ref(false)
 const touched = ref(false)
 
-// ── Filtered options ──────────────────────────────────────────────────────────
+// ── Validation ─────────────────────────────────────────────────────────────────
+const isEmpty = computed(() => !model.value)
+const showError = computed(() => props.required && touched.value && isEmpty.value)
+const labelUp = computed(() => focused.value || !!model.value)
+
+// ── Filtered options ───────────────────────────────────────────────────────────
 const filtered = computed<TmsOption[]>(() => {
   const needle = query.value.trim().toLowerCase()
   if (!needle) return props.options
-  return props.options.filter(
-    (o) => o.label.toLowerCase().includes(needle) || o.value.toLowerCase().includes(needle)
+  return props.options.filter(o =>
+    o.label.toLowerCase().includes(needle) || o.value.toLowerCase().includes(needle)
   )
 })
 
-// ── Display label of current model value ──────────────────────────────────────
-function committedLabel(): string {
-  return props.options.find((o) => o.value === model.value)?.label ?? model.value ?? ''
+// ── Committed label ────────────────────────────────────────────────────────────
+function committedLabel() {
+  return props.options.find(o => o.value === model.value)?.label ?? ''
 }
 
-// ── Validation ────────────────────────────────────────────────────────────────
-const isEmpty = computed(() => !model.value)
-const showError = computed(() => props.required && touched.value && isEmpty.value)
-
-// ── Dropdown position ─────────────────────────────────────────────────────────
-const dropTop = ref(0)
-const dropLeft = ref(0)
-const dropWidth = ref(160)
+// ── Dropdown position ──────────────────────────────────────────────────────────
+const dropStyle = ref({ top: '0px', left: '0px', width: '0px' })
 
 function place() {
-  const rect = inputRef.value?.getBoundingClientRect()
+  const rect = inputRef.value?.closest('.tms-combo')?.getBoundingClientRect()
   if (!rect) return
-  dropTop.value = rect.bottom + window.scrollY
-  dropLeft.value = rect.left + window.scrollX
-  dropWidth.value = Math.max(rect.width, 180)
+  dropStyle.value = {
+    top: `${rect.bottom + 2}px`,
+    left: `${rect.left}px`,
+    width: `${rect.width}px`,
+  }
 }
 
-// ── Open / close ──────────────────────────────────────────────────────────────
+// ── Open / close ───────────────────────────────────────────────────────────────
 function openList() {
-  query.value = committedLabel()
-  activeIdx.value = Math.max(0, props.options.findIndex((o) => o.value === model.value))
+  query.value = ''
+  activeIdx.value = Math.max(0, props.options.findIndex(o => o.value === model.value))
   open.value = true
-  place()
+  nextTick(place)
 }
 
-function closeList() {
+function closeList(restoreLabel = true) {
   open.value = false
-  query.value = committedLabel()
+  if (restoreLabel) query.value = committedLabel()
   accepted.value = false
 }
 
-// ── Pick an option ────────────────────────────────────────────────────────────
+// ── Choose ─────────────────────────────────────────────────────────────────────
 function choose(option: TmsOption) {
   model.value = option.value
   query.value = option.label
@@ -106,8 +84,34 @@ function choose(option: TmsOption) {
   nextTick(() => inputRef.value?.select())
 }
 
-// ── Keyboard handler ──────────────────────────────────────────────────────────
-function onKey(e: KeyboardEvent) {
+// ── Events ─────────────────────────────────────────────────────────────────────
+function onFocus() {
+  focused.value = true
+  accepted.value = false
+  openList()
+}
+
+function onBlur() {
+  // Delay so mousedown on option fires first
+  setTimeout(() => {
+    if (document.activeElement !== inputRef.value) {
+      focused.value = false
+      touched.value = true
+      closeList()
+    }
+  }, 200)
+}
+
+function onType(e: Event) {
+  const val = (e.target as HTMLInputElement).value
+  query.value = val
+  accepted.value = false
+  activeIdx.value = 0
+  open.value = true
+  nextTick(place)
+}
+
+function onKeydown(e: KeyboardEvent) {
   if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
     e.preventDefault()
     accepted.value = false
@@ -115,12 +119,18 @@ function onKey(e: KeyboardEvent) {
     const count = filtered.value.length
     if (!count) return
     activeIdx.value = (activeIdx.value + (e.key === 'ArrowDown' ? 1 : -1) + count) % count
+    // Scroll active item into view
+    nextTick(() => {
+      const list = document.querySelector('.tms-combo-drop')
+      const item = list?.querySelectorAll('.tms-combo-opt')[activeIdx.value] as HTMLElement
+      item?.scrollIntoView({ block: 'nearest' })
+    })
     return
   }
 
   if (e.key === 'Escape') {
     e.preventDefault()
-    if (open.value) closeList()
+    closeList()
     return
   }
 
@@ -154,93 +164,79 @@ function onKey(e: KeyboardEvent) {
   }
 }
 
-function onFocus() {
-  accepted.value = false
-  openList()
-  inputRef.value?.select()
-}
-
-function onType(e: Event) {
-  const val = (e.target as HTMLInputElement).value
-  query.value = val
-  accepted.value = false
-  activeIdx.value = 0
-  open.value = true
-  place()
-}
-
-function onBlur(e: FocusEvent) {
-  // if focus moved to inside the dropdown (mousedown.prevent), don't close
-  setTimeout(() => {
-    if (!inputRef.value?.closest('.tms-combo')?.contains(document.activeElement)) {
-      closeList()
-      touched.value = true
-    }
-  }, 150)
-}
-
 // Sync display when model changes externally
 watch(() => model.value, () => {
   if (!open.value) query.value = committedLabel()
-})
+}, { immediate: true })
 </script>
 
 <template>
   <div class="tms-combo">
-    <!-- Label -->
-    <div class="tms-combo-label text-caption text-grey-7 q-mb-xs">
-      {{ label }}<span v-if="required" class="text-negative"> *</span>
-    </div>
+    <!-- Bordered box — identical look to TmsField -->
+    <div
+      class="tms-combo__wrap"
+      :class="{
+        'tms-combo__wrap--focused': focused,
+        'tms-combo__wrap--error': showError
+      }"
+    >
+      <!-- Floating label -->
+      <label
+        :for="fieldId"
+        class="tms-combo__label"
+        :class="{
+          'tms-combo__label--up': labelUp,
+          'tms-combo__label--focused': focused,
+          'tms-combo__label--error': showError,
+        }"
+      >
+        {{ label }}<span v-if="required" class="tms-req"> *</span>
+      </label>
 
-    <!-- Input wrapper -->
-    <div class="tms-combo-input-wrap" :class="{ 'tms-combo-open': open, 'tms-combo-error': showError }">
+      <!-- Input for typing / display -->
       <input
         ref="inputRef"
         :id="fieldId"
         :data-tms-field="fieldId"
         v-bind="initial ? { 'data-tms-initial': '' } : {}"
-        :value="query"
+        class="tms-combo__input"
+        :value="open ? query : committedLabel()"
+        :placeholder="open ? 'Type to filter…' : ''"
         autocomplete="off"
-        class="tms-combo-input"
-        :placeholder="committedLabel() || 'Select...'"
         @focus="onFocus"
-        @input="onType"
         @blur="onBlur"
-        @keydown="onKey"
+        @input="onType"
+        @keydown="onKeydown"
       />
-      <q-icon
-        name="arrow_drop_down"
-        class="tms-combo-arrow"
-        :class="{ 'tms-combo-arrow-open': open }"
-        @mousedown.prevent="open ? closeList() : openList()"
-      />
+
+      <!-- Arrow icon -->
+      <span class="tms-combo__arrow" @mousedown.prevent="open ? closeList() : (inputRef?.focus(), openList())">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M7 10l5 5 5-5z"/>
+        </svg>
+      </span>
     </div>
 
-    <!-- Error message -->
-    <div v-if="showError" class="tms-combo-errmsg text-negative text-caption q-mt-xs">
-      {{ label }} is required
-    </div>
+    <!-- Error -->
+    <div v-if="showError" class="tms-field__msg tms-field__msg--error">{{ label }} is required</div>
 
-    <!-- Dropdown (teleported to body so it's never clipped) -->
+    <!-- Dropdown teleported to body -->
     <Teleport to="body">
       <div
-        v-if="open && filtered.length"
-        class="tms-combo-dropdown"
-        :style="{
-          top: `${dropTop}px`,
-          left: `${dropLeft}px`,
-          minWidth: `${dropWidth}px`,
-        }"
+        v-if="open"
+        class="tms-combo-drop"
+        :style="dropStyle"
         @mousedown.prevent
       >
+        <div v-if="filtered.length === 0" class="tms-combo-opt tms-combo-opt--empty">No matches</div>
         <div
-          v-for="(option, idx) in filtered"
-          :key="option.value"
-          class="tms-combo-option"
-          :class="{ 'tms-combo-option-active': idx === activeIdx }"
-          @mousedown.prevent="choose(option)"
+          v-for="(opt, idx) in filtered"
+          :key="opt.value"
+          class="tms-combo-opt"
+          :class="{ 'tms-combo-opt--active': idx === activeIdx }"
+          @mousedown.prevent="choose(opt)"
         >
-          {{ option.label }}
+          {{ opt.label }}
         </div>
       </div>
     </Teleport>
@@ -248,70 +244,111 @@ watch(() => model.value, () => {
 </template>
 
 <style scoped>
-.tms-combo { position: relative; }
+.tms-combo { position: relative; margin-bottom: 4px; }
 
-.tms-combo-label { font-size: 12px; font-weight: 500; }
-
-.tms-combo-input-wrap {
+/* Wrap — same look as TmsField */
+.tms-combo__wrap {
+  position: relative;
   display: flex;
   align-items: center;
-  border: 1px solid #c0c0c0;
+  border: 1px solid rgba(0,0,0,0.24);
   border-radius: 4px;
+  height: 40px;
   background: #fff;
-  transition: border-color .15s;
+  transition: border-color 0.2s;
+  cursor: pointer;
 }
-.tms-combo-input-wrap:focus-within,
-.tms-combo-open {
-  border-color: var(--q-primary);
-  box-shadow: 0 0 0 2px rgba(25, 118, 210, .12);
+.tms-combo__wrap--focused {
+  border-color: var(--q-primary, #1976d2);
+  border-width: 2px;
 }
-.tms-combo-error { border-color: var(--q-negative) !important; }
+.tms-combo__wrap--error {
+  border-color: var(--q-negative, #c10015) !important;
+  border-width: 2px;
+}
 
-.tms-combo-input {
+/* Floating label */
+.tms-combo__label {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  color: rgba(0,0,0,0.6);
+  background: transparent;
+  pointer-events: none;
+  transition: all 0.15s ease;
+  line-height: 1;
+  white-space: nowrap;
+  z-index: 1;
+}
+.tms-combo__label--up {
+  top: 0;
+  transform: translateY(-50%);
+  font-size: 11px;
+  background: #fff;
+  padding: 0 3px;
+  left: 9px;
+}
+.tms-combo__label--focused { color: var(--q-primary, #1976d2); }
+.tms-combo__label--error { color: var(--q-negative, #c10015) !important; }
+.tms-req { color: var(--q-negative, #c10015); }
+
+/* Input */
+.tms-combo__input {
   flex: 1;
+  height: 100%;
   border: none;
   outline: none;
   background: transparent;
-  padding: 7px 8px;
+  padding: 8px 4px 0 12px;
   font-size: 14px;
-  color: #1a1a1a;
+  color: rgba(0,0,0,0.87);
+  font-family: inherit;
+  cursor: pointer;
   min-width: 0;
 }
+.tms-combo__input::placeholder { color: rgba(0,0,0,0.38); }
 
-.tms-combo-arrow {
-  padding: 0 6px;
-  color: #888;
-  cursor: pointer;
-  transition: transform .15s;
+/* Arrow */
+.tms-combo__arrow {
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  color: rgba(0,0,0,0.54);
+  flex-shrink: 0;
 }
-.tms-combo-arrow-open { transform: rotate(180deg); }
 
-.tms-combo-errmsg { font-size: 11px; }
+/* Hint/error */
+.tms-field__msg { font-size: 11px; color: rgba(0,0,0,0.54); padding: 2px 12px 0; min-height: 16px; }
+.tms-field__msg--error { color: var(--q-negative, #c10015); }
 </style>
 
-<!-- Global dropdown styles (cannot be scoped since teleported outside component) -->
+<!-- Global dropdown styles — teleported outside scoped component -->
 <style>
-.tms-combo-dropdown {
+.tms-combo-drop {
   position: fixed;
-  z-index: 9999;
+  z-index: 9000;
   background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  box-shadow: 0 4px 16px rgba(0,0,0,.12);
-  max-height: 240px;
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 4px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+  max-height: 220px;
   overflow-y: auto;
 }
-.tms-combo-option {
-  padding: 8px 14px;
+.tms-combo-opt {
+  padding: 9px 14px;
   font-size: 14px;
+  color: rgba(0,0,0,0.87);
   cursor: pointer;
-  color: #1a1a1a;
-  transition: background .1s;
+  font-family: inherit;
+  transition: background 0.1s;
 }
-.tms-combo-option:hover { background: #f0f4ff; }
-.tms-combo-option-active {
+.tms-combo-opt:hover { background: #f5f5f5; }
+.tms-combo-opt--active {
   background: #e8f0fe;
-  color: var(--q-primary);
+  color: #1976d2;
   font-weight: 500;
 }
+.tms-combo-opt--empty { color: rgba(0,0,0,0.38); font-style: italic; cursor: default; }
 </style>
