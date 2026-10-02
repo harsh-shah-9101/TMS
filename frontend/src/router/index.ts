@@ -17,7 +17,12 @@ const routes: RouteRecordRaw[] = [
     component: CompanyLayout,
     children: [
       { path: '', name: 'Dashboard', component: () => import('../pages/dashboard/DashboardPage.vue') },
-      { path: 'vehicles', name: 'Vehicles', component: () => import('../pages/vehicles/VehiclesPage.vue') }
+      { path: 'vehicles', name: 'Vehicles', component: () => import('../pages/vehicles/VehiclesPage.vue') },
+      { path: 'parties', name: 'Parties', component: () => import('../pages/parties/PartiesPage.vue') },
+      { path: 'drivers', name: 'Drivers', component: () => import('../pages/drivers/DriversPage.vue') },
+      { path: 'vehicle-types', name: 'VehicleTypes', component: () => import('../pages/vehicle-types/VehicleTypesPage.vue') },
+      { path: 'carriers', name: 'Carriers', component: () => import('../pages/carriers/CarriersPage.vue') },
+      { path: 'routes', name: 'Routes', component: () => import('../pages/routes/RoutesPage.vue') }
     ]
   },
 ]
