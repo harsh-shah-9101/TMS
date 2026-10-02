@@ -37,13 +37,21 @@ function focusEl(el: HTMLInputElement): void {
   try { el.select() } catch { /* textarea / date inputs may skip this */ }
 }
 
-export function useTmsFormFocus(containerRef: Ref<HTMLElement | null>): TmsFormFocus {
+export function useTmsFormFocus(
+  containerRef: Ref<HTMLElement | null>,
+  onSubmit?: () => void,
+): TmsFormFocus {
   function focusNext(currentId: string): void {
     const container = containerRef.value
     if (!container) return
     const fields = getFields(container)
     const idx = fields.findIndex(el => el.dataset.tmsField === currentId)
-    if (idx === -1 || idx === fields.length - 1) return
+    if (idx === -1) return
+    if (idx === fields.length - 1) {
+      // Last field — submit the form
+      onSubmit?.()
+      return
+    }
     focusEl(fields[idx + 1]!)
   }
 

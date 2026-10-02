@@ -26,7 +26,10 @@ const pagination = ref({ page: 1, rowsPerPage: 10, rowsNumber: 0 })
 
 // ─── Keyboard-first form focus ────────────────────────────────────────────────
 const formContainerRef = ref<HTMLElement | null>(null)
-const { focusNext, focusPrev, focusInitial } = useTmsFormFocus(formContainerRef)
+const { focusNext, focusPrev, focusInitial } = useTmsFormFocus(
+  formContainerRef,
+  () => onSubmit(), // Enter on last field → save
+)
 
 // ─── KPIs ─────────────────────────────────────────────────────────────────────
 const kpis = ref([
