@@ -1,184 +1,431 @@
-<script setup lang="ts">
-import { ref } from 'vue'
-import { useAuthStore } from '@/stores/auth'
-
-const authStore = useAuthStore()
-
-// Mock data (in future fetch from backend APIs)
-const stats = ref([
-  { title: 'Total Fleet', value: '45', icon: 'local_shipping', color: 'cyan-8', subtitle: '+2 this month' },
-  { title: 'Fleet Utilisation', value: '82%', icon: 'data_usage', color: 'primary', subtitle: 'Above target' },
-  { title: 'Avg KM/L', value: '4.2', icon: 'speed', color: 'cyan-8', subtitle: 'Steady' },
-  { title: 'Compliance Alerts', value: '3', icon: 'warning', color: 'amber-9', subtitle: 'Needs attention', isAlert: true },
-  { title: 'Open LRs', value: '18', icon: 'receipt_long', color: 'primary', subtitle: 'Pending assignment' },
-  { title: 'Active Trips', value: '12', icon: 'alt_route', color: 'cyan-8', subtitle: 'In transit' },
-  { title: 'Pending POD', value: '5', icon: 'fact_check', color: 'amber-9', subtitle: 'Action required' },
-  { title: 'Outstanding Recv', value: '₹1.2M', icon: 'account_balance', color: 'negative', subtitle: 'Overdue >30 days' }
-])
-
-const recentActivity = ref([
-  { id: 'LR-10023', type: 'LR Created', details: 'Reliance Industries', time: '10 mins ago', status: 'DRAFT', statusColor: 'grey' },
-  { id: 'TRP-5042', type: 'Trip Started', details: 'Mumbai - Delhi (MH-04-AB-1234)', time: '1 hr ago', status: 'IN_TRANSIT', statusColor: 'cyan' },
-  { id: 'POD-8891', type: 'POD Uploaded', details: 'Tata Motors', time: '2 hrs ago', status: 'VERIFIED', statusColor: 'positive' },
-  { id: 'EXC-901', type: 'Fuel Anomaly', details: 'Vehicle MH-12-CD-9090 reported 20% drop', time: '3 hrs ago', status: 'REVIEW', statusColor: 'amber' }
-])
-</script>
-
 <template>
-  <q-page class="q-pa-lg">
-    
-    <!-- PAGE HEADER -->
-    <div class="row items-center q-mb-xl">
-      <div>
-        <div class="text-h5 text-weight-bold text-dark">Operations Overview</div>
-        <div class="text-subtitle2 text-grey-6 q-mt-xs">
-          Welcome back, {{ authStore.user?.firstName || 'User' }}. Here's what's happening today.
+  <div class="desk-page dashboard-page">
+    <div class="desk-toolbar">
+      <strong>Operations Overview</strong>
+      <span class="welcome-text">Welcome back, {{ userName }}.</span>
+      <div class="quick-nav-actions">
+        <button type="button" @click="router.push('/vehicles')">
+          Vehicles <small>Alt+M V</small>
+        </button>
+        <button type="button" @click="router.push('/parties')">
+          Parties <small>Alt+M P</small>
+        </button>
+        <button type="button" @click="router.push('/drivers')">
+          Drivers <small>Alt+M R</small>
+        </button>
+        <button type="button" class="is-primary" @click="router.push('/vehicles?new=1')">
+          + New Fleet <small>Alt+N</small>
+        </button>
+      </div>
+      <span class="desk-toolbar-count">{{ currentDate }}</span>
+    </div>
+
+    <div class="dashboard-scrollable">
+      <!-- KPI Row -->
+      <div class="kpi-grid">
+        <div v-for="kpi in kpis" :key="kpi.label" class="kpi-card" :class="kpi.accent">
+          <div class="kpi-header">
+            <span class="kpi-label">{{ kpi.label }}</span>
+            <span class="kpi-icon">{{ kpi.icon }}</span>
+          </div>
+          <div class="kpi-value">{{ kpi.value }}</div>
+          <div class="kpi-subtext">{{ kpi.subtext }}</div>
         </div>
-        <div style="width: 40px; height: 3px; border-radius: 2px;" class="bg-cyan-6 q-mt-sm"></div>
       </div>
-      <q-space />
-      <div class="q-gutter-sm">
-        <q-btn outline color="grey-8" label="Export Report" icon="download" class="bg-white q-px-md" />
-        <q-btn unelevated color="primary" label="New Booking" icon="add" class="q-px-md shadow-2" />
+
+      <!-- Main Dashboard Content Split -->
+      <div class="dashboard-split">
+        <!-- Live Fleet Health -->
+        <div class="dash-panel">
+          <div class="panel-header">
+            <h3>Fleet Status Overview</h3>
+            <button type="button" class="panel-link" @click="router.push('/vehicles')">
+              View All Vehicles →
+            </button>
+          </div>
+          <div class="fleet-status-bars">
+            <div class="status-summary-bar">
+              <div class="bar-segment seg-available" style="width: 55%;" title="Available: 55%"></div>
+              <div class="bar-segment seg-transit" style="width: 30%;" title="In Transit: 30%"></div>
+              <div class="bar-segment seg-maint" style="width: 10%;" title="Maintenance: 10%"></div>
+              <div class="bar-segment seg-offline" style="width: 5%;" title="Out of Service: 5%"></div>
+            </div>
+            <div class="status-legend">
+              <span class="legend-item"><span class="dot dot-avail"></span> 24 Available</span>
+              <span class="legend-item"><span class="dot dot-transit"></span> 13 In Transit</span>
+              <span class="legend-item"><span class="dot dot-maint"></span> 4 Maintenance</span>
+              <span class="legend-item"><span class="dot dot-offline"></span> 2 Out of Service</span>
+            </div>
+          </div>
+
+          <div class="quick-table-wrap">
+            <table class="dash-table">
+              <thead>
+                <tr>
+                  <th>Reg Number</th>
+                  <th>Vehicle Type</th>
+                  <th>Ownership</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="v in sampleVehicles" :key="v.reg" @click="router.push('/vehicles')">
+                  <td class="desk-mono-cell">{{ v.reg }}</td>
+                  <td>{{ v.type }}</td>
+                  <td>{{ v.ownership }}</td>
+                  <td>
+                    <span :class="['status-badge', v.statusClass]">{{ v.status }}</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Recent Operations Feed -->
+        <div class="dash-panel">
+          <div class="panel-header">
+            <h3>Recent Operations Log</h3>
+            <span class="live-pulse"><span class="pulse-dot"></span> Live Stream</span>
+          </div>
+          <div class="feed-list">
+            <div v-for="item in feedItems" :key="item.id" class="feed-item">
+              <div class="feed-time">{{ item.time }}</div>
+              <div class="feed-body">
+                <div class="feed-title">
+                  <strong>{{ item.code }}</strong> — {{ item.title }}
+                </div>
+                <div class="feed-desc">{{ item.desc }}</div>
+              </div>
+              <div class="feed-badge">
+                <span :class="['status-badge', item.badgeClass]">{{ item.badge }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-
-    <!-- KPI CARDS -->
-    <div class="row q-col-gutter-md q-mb-xl">
-      <div class="col-12 col-sm-6 col-md-3" v-for="stat in stats" :key="stat.title">
-        <q-card 
-          class="my-card shadow-1 rounded-borders full-height" 
-          flat 
-          bordered
-          :class="stat.isAlert ? 'border-amber' : ''"
-        >
-          <q-card-section class="q-pa-md flex column justify-between full-height">
-            <div class="row items-center justify-between q-mb-sm">
-              <div class="text-subtitle2 text-grey-7 text-weight-medium text-uppercase" style="letter-spacing: 0.5px">
-                {{ stat.title }}
-              </div>
-              <q-avatar size="38px" :color="`${stat.color}-1`" :text-color="stat.color">
-                <q-icon :name="stat.icon" size="20px" />
-              </q-avatar>
-            </div>
-            
-            <div>
-              <div class="text-h4 text-weight-bold text-dark q-mb-xs">
-                {{ stat.value }}
-              </div>
-              <div class="text-caption text-weight-medium" :class="stat.isAlert ? 'text-amber-9' : 'text-grey-6'">
-                {{ stat.subtitle }}
-              </div>
-            </div>
-          </q-card-section>
-        </q-card>
-      </div>
-    </div>
-
-    <!-- MAIN DASHBOARD CONTENT -->
-    <div class="row q-col-gutter-lg">
-      
-      <!-- LEFT COLUMN (Charts/Main) -->
-      <div class="col-12 col-lg-8">
-        <q-card class="shadow-1 rounded-borders q-mb-lg" flat bordered>
-          <q-card-section class="q-pa-md border-bottom">
-            <div class="row items-center justify-between">
-              <div class="text-h6 text-weight-bold text-dark">Trip Revenue vs Cost (Mock)</div>
-              <q-btn-dropdown flat dense color="grey-7" label="Last 30 Days" />
-            </div>
-          </q-card-section>
-          
-          <q-card-section class="q-pa-lg flex flex-center" style="height: 300px; background: #fafafa">
-            <!-- Placeholder for actual chart component (e.g. vue-apexcharts) -->
-            <div class="text-grey-5 column items-center">
-              <q-icon name="bar_chart" size="64px" />
-              <div>Chart Component Placeholder</div>
-              <div class="text-caption">Requires backend analytics API integration</div>
-            </div>
-          </q-card-section>
-        </q-card>
-
-        <q-card class="shadow-1 rounded-borders" flat bordered>
-          <q-card-section class="q-pa-md border-bottom">
-            <div class="text-h6 text-weight-bold text-dark">Fleet Status Overview (Mock)</div>
-          </q-card-section>
-          
-          <q-card-section class="q-pa-lg flex flex-center" style="height: 250px; background: #fafafa">
-             <!-- Placeholder for map/donut chart -->
-             <div class="text-grey-5 column items-center">
-              <q-icon name="pie_chart" size="64px" />
-              <div>Fleet Distribution Placeholder</div>
-            </div>
-          </q-card-section>
-        </q-card>
-      </div>
-
-      <!-- RIGHT COLUMN (Activity/Alerts) -->
-      <div class="col-12 col-lg-4">
-        
-        <!-- Recent Activity -->
-        <q-card class="shadow-1 rounded-borders q-mb-lg full-height" flat bordered>
-          <q-card-section class="q-pa-md border-bottom">
-            <div class="text-h6 text-weight-bold text-dark">Recent Activity</div>
-          </q-card-section>
-
-          <q-card-section class="q-pa-none">
-            <q-list separator>
-              <q-item v-for="item in recentActivity" :key="item.id" class="q-py-md">
-                <q-item-section avatar top>
-                  <q-avatar size="40px" color="grey-2" text-color="grey-8">
-                    <q-icon name="history" size="20px" />
-                  </q-avatar>
-                </q-item-section>
-
-                <q-item-section>
-                  <q-item-label class="text-weight-bold text-dark">{{ item.type }}</q-item-label>
-                  <q-item-label caption class="text-grey-7 q-mt-xs">{{ item.details }}</q-item-label>
-                  <div class="q-mt-sm row items-center">
-                    <q-badge :color="item.statusColor" rounded class="q-mr-sm q-px-sm py-xs text-weight-medium">
-                      {{ item.status }}
-                    </q-badge>
-                    <span class="text-caption text-grey-5">{{ item.time }}</span>
-                  </div>
-                </q-item-section>
-                
-                <q-item-section side top>
-                  <q-btn flat round dense icon="chevron_right" color="grey-6" />
-                </q-item-section>
-              </q-item>
-            </q-list>
-            
-            <div class="q-pa-md text-center border-top">
-              <q-btn flat color="primary" label="View All Activity" class="full-width" />
-            </div>
-          </q-card-section>
-        </q-card>
-        
-      </div>
-    </div>
-  </q-page>
+  </div>
 </template>
 
+<script setup lang="ts">
+import { computed } from 'vue';
+import { useRouter } from 'vue-router';
+import { useAuthStore } from '@/stores/auth';
+import { useDeskLayer } from '@/desk/tms/ui';
+
+const router = useRouter();
+const auth = useAuthStore();
+
+useDeskLayer({
+  handlers: {
+    'action-new': () => {
+      void router.push('/vehicles?new=1');
+    },
+    'nav-vehicles': () => void router.push('/vehicles'),
+    'nav-parties': () => void router.push('/parties'),
+    'nav-drivers': () => void router.push('/drivers'),
+  },
+});
+
+const userName = computed(() => auth.user?.name || auth.user?.firstName || 'Dispatcher');
+
+const currentDate = computed(() =>
+  new Intl.DateTimeFormat('en-IN', {
+    weekday: 'short',
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  }).format(new Date()),
+);
+
+const kpis = [
+  { label: 'Active Fleet', value: '43 / 48', subtext: '90% fleet utilization', icon: '🚛', accent: 'accent-primary' },
+  { label: 'Active Trips', value: '18', subtext: '3 arriving today', icon: '🛣️', accent: 'accent-info' },
+  { label: 'Pending PODs', value: '5', subtext: 'Action required', icon: '📄', accent: 'accent-warning' },
+  { label: 'Revenue (MTD)', value: '₹48.2L', subtext: '+12.4% vs last month', icon: '💳', accent: 'accent-success' },
+];
+
+const sampleVehicles = [
+  { reg: 'MH12AB1001', type: '32ft Container', ownership: 'Owned', status: 'Available', statusClass: 'status-success' },
+  { reg: 'DL01XY5542', type: '16-Wheeler Trailer', ownership: 'Owned', status: 'In Transit', statusClass: 'status-info' },
+  { reg: 'KA04CD9021', type: 'Open Body Truck', ownership: 'Leased', status: 'In Transit', statusClass: 'status-info' },
+  { reg: 'GJ06EF3412', type: '24ft Container', ownership: 'Market', status: 'Maintenance', statusClass: 'status-warning' },
+  { reg: 'MH04GH7819', type: '10-Wheeler', ownership: 'Owned', status: 'Available', statusClass: 'status-success' },
+];
+
+const feedItems = [
+  { id: '1', time: '10m ago', code: 'TRP-1049', title: 'Trip Started', desc: 'Mumbai to Delhi · Tata Signa 4825', badge: 'Dispatched', badgeClass: 'status-info' },
+  { id: '2', time: '25m ago', code: 'LR-8821', title: 'Booking Confirmed', desc: 'Reliance Ind. · 24 MT Polymers', badge: 'Confirmed', badgeClass: 'status-success' },
+  { id: '3', time: '1h ago', code: 'POD-4029', title: 'Delivery Completed', desc: 'Bengaluru Distribution Hub', badge: 'Delivered', badgeClass: 'status-success' },
+  { id: '4', time: '2h ago', code: 'ALR-201', title: 'Fitness Expiry Alert', desc: 'Vehicle DL01XY5542 expires in 5 days', badge: 'Attention', badgeClass: 'status-warning' },
+];
+</script>
+
 <style scoped>
-.my-card {
-  border-radius: 12px;
-  border-color: #e5e7eb;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-.my-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+.dashboard-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--desk-bg);
+  overflow: hidden;
 }
 
-.border-bottom {
-  border-bottom: 1px solid #e5e7eb;
-}
-.border-top {
-  border-top: 1px solid #e5e7eb;
+.welcome-text {
+  font-size: 12px;
+  color: var(--desk-muted);
+  margin-left: 10px;
 }
 
-.border-amber {
-  border-color: #f59e0b !important;
-  border-width: 1px;
+.quick-nav-actions {
+  display: flex;
+  gap: 6px;
+  margin-left: 20px;
+}
+
+.dashboard-scrollable {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* KPI Grid */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.kpi-card {
+  background: #ffffff;
+  border: 1px solid var(--desk-grid-line);
+  border-radius: 6px;
+  padding: 12px 16px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.kpi-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+}
+
+.kpi-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.kpi-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--desk-muted);
+  letter-spacing: 0.03em;
+}
+
+.kpi-icon {
+  font-size: 16px;
+}
+
+.kpi-value {
+  font-size: 24px;
+  font-weight: 750;
+  color: var(--desk-text);
+  font-family: var(--desk-font-mono);
+}
+
+.kpi-subtext {
+  font-size: 11.5px;
+  color: var(--desk-muted);
+  margin-top: 4px;
+}
+
+/* Split layout */
+.dashboard-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 900px) {
+  .dashboard-split {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dash-panel {
+  background: #ffffff;
+  border: 1px solid var(--desk-grid-line);
+  border-radius: 6px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.panel-header h3 {
+  margin: 0;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--desk-text);
+}
+
+.panel-link {
+  background: none;
+  border: none;
+  color: var(--desk-primary);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 2px 6px;
+}
+
+.panel-link:hover {
+  text-decoration: underline;
+}
+
+/* Live Pulse */
+.live-pulse {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: #10b981;
+  font-weight: 600;
+}
+
+.pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10b981;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 5px rgba(16, 185, 129, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+/* Status bars */
+.status-summary-bar {
+  display: flex;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #f1f5f9;
+}
+
+.bar-segment { height: 100%; }
+.seg-available { background: var(--desk-success); }
+.seg-transit { background: var(--desk-info); }
+.seg-maint { background: var(--desk-warning); }
+.seg-offline { background: var(--desk-danger); }
+
+.status-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--desk-muted);
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+.dot-avail { background: var(--desk-success); }
+.dot-transit { background: var(--desk-info); }
+.dot-maint { background: var(--desk-warning); }
+.dot-offline { background: var(--desk-danger); }
+
+/* Quick table */
+.quick-table-wrap {
+  border: 1px solid var(--desk-grid-line);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.dash-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.dash-table th {
+  background: #f8fafc;
+  text-align: left;
+  padding: 6px 10px;
+  font-weight: 600;
+  color: #475569;
+  border-bottom: 1px solid var(--desk-grid-line);
+}
+
+.dash-table td {
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--desk-grid-line);
+  cursor: pointer;
+}
+
+.dash-table tr:hover td {
+  background: #f8fafc;
+}
+
+/* Feed list */
+.feed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.feed-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  border: 1px solid #f1f5f9;
+  border-radius: 5px;
+  background: #fafafa;
+}
+
+.feed-time {
+  font-family: var(--desk-font-mono);
+  font-size: 10.5px;
+  color: #94a3b8;
+  min-width: 50px;
+}
+
+.feed-body {
+  flex: 1;
+}
+
+.feed-title {
+  font-size: 12px;
+  color: var(--desk-text);
+}
+
+.feed-desc {
+  font-size: 11px;
+  color: var(--desk-muted);
 }
 </style>

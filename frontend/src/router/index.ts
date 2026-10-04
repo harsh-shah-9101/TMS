@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
-import CompanyLayout from '../layouts/CompanyLayout.vue'
+import DeskLayout from '../layouts/DeskLayout.vue'
 import AuthLayout from '../layouts/AuthLayout.vue'
 
 const routes: RouteRecordRaw[] = [
@@ -18,7 +18,7 @@ const routes: RouteRecordRaw[] = [
   // ── Protected app routes ──────────────────────────────────────────────────
   {
     path: '/',
-    component: CompanyLayout,
+    component: DeskLayout,
     meta: { requiresAuth: true },
     children: [
       { path: '', name: 'Dashboard', component: () => import('../pages/dashboard/DashboardPage.vue') },

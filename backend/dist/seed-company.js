@@ -118,9 +118,9 @@ async function bootstrap() {
         }
     }
     const customers = [
-        { name: 'Tata Steel', type: enums_1.CustomerType.CORPORATE, gstin: '27AADCT1234E1Z1' },
-        { name: 'Reliance Industries', type: enums_1.CustomerType.CORPORATE, gstin: '27AAACR1234F1Z1' },
-        { name: 'Maruti Suzuki', type: enums_1.CustomerType.CORPORATE, gstin: '06AAACM1234G1Z1' }
+        { name: 'Tata Steel', type: enums_1.CustomerType.SHIPPER, gstin: '27AADCT1234E1Z1' },
+        { name: 'Reliance Industries', type: enums_1.CustomerType.SHIPPER, gstin: '27AAACR1234F1Z1' },
+        { name: 'Maruti Suzuki', type: enums_1.CustomerType.SHIPPER, gstin: '06AAACM1234G1Z1' }
     ];
     for (const c of customers) {
         let cust = await customerModel.findOne({ where: { name: c.name, organizationId: org.id } });

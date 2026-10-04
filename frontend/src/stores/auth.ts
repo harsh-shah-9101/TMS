@@ -76,9 +76,18 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  const can = (permission?: string) => {
+    if (!permission) return true;
+    const permissions = user.value?.role?.permissions ?? user.value?.permissions;
+    if (Array.isArray(permissions)) {
+      return permissions.includes(permission) || permissions.includes('*');
+    }
+    return true; // Default allow for admin/manager
+  };
+
   return {
     token, user,
     isAuthenticated, userRole, organizationId,
-    setToken, setUser, login, logout, fetchProfile,
+    setToken, setUser, login, logout, fetchProfile, can,
   }
 })

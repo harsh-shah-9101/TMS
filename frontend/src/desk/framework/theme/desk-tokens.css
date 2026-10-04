@@ -1,0 +1,44 @@
+/*
+ * Desk tokens. Colours come from vue3-excel-editor (MIT).
+ * Copyright (c) 2019 Kenneth Cheng <app.6502@gmail.com>
+ */
+:root {
+  --desk-grid-line: lightgray;
+  --desk-header-bg: #e9ecef;
+  --desk-header-focus: rgb(61, 85, 61);
+  --desk-cursor: rgb(108, 143, 108);
+  --desk-cell-focus-ring: #212529;
+  --desk-cell-focus-outline: rgb(108, 143, 108);
+  --desk-row-bg: #ffffff;
+  --desk-row-selected: #bbbbbb;
+  --desk-filter-bg: #fffff2;
+  --desk-text: #212529;
+  --desk-muted: dimgray;
+  --desk-link: #007bff;
+  --desk-suggest-bg: lightyellow;
+  --desk-suggest-active: lightsteelblue;
+  --desk-error: #c0392b;
+  --desk-invalid-bg: #fdecea;
+  --desk-font: 0.88rem;
+  --desk-row-height: 24px;
+  --desk-header-height: 29px;
+  --desk-footer-height: 25px;
+  --desk-index-width: 40px;
+}
+
+body.body--dark {
+  --desk-grid-line: #3a3f45;
+  --desk-header-bg: #2c3136;
+  --desk-header-focus: #8fbc8f;
+  --desk-cursor: #8fbc8f;
+  --desk-cell-focus-ring: #e8eaed;
+  --desk-cell-focus-outline: #8fbc8f;
+  --desk-row-bg: #1e2226;
+  --desk-row-selected: #4a5158;
+  --desk-filter-bg: #2a2e22;
+  --desk-text: #e8eaed;
+  --desk-muted: #9aa0a6;
+  --desk-suggest-bg: #3a3820;
+  --desk-suggest-active: #3d4d66;
+  --desk-invalid-bg: #3a2422;
+}

@@ -4,6 +4,7 @@ import { createPinia } from 'pinia'
 import router from './router'
 import '@quasar/extras/material-icons/material-icons.css'
 import 'quasar/src/css/index.sass'
+import '@/desk/tms/ui/theme'
 import App from './App.vue'
 
 const app = createApp(App)
